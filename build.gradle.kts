@@ -1,10 +1,10 @@
 plugins {
-    kotlin("jvm") version "1.3.72"
+    kotlin("jvm") version "1.5.0"
     application
 }
 
 val version by extra("0.1.0")
-val kotlinVersion by extra("1.3.72")
+val kotlinVersion by extra("1.5.0")
 
 
 allprojects {

@@ -3,8 +3,6 @@ val kotlinVersion = fromExtra("kotlinVersion")!!
 
 dependencies {
     implementation("com.google.code.gson:gson:2.8.6")
-    implementation("commons-cli", "commons-cli", "1.4")
-
     implementation(kotlin("stdlib", kotlinVersion))
 
     testImplementation("junit:junit:4.12")
