@@ -3,7 +3,6 @@ package com.kochetkov.archiver
 import java.io.File
 import java.io.FileOutputStream
 import java.lang.Math.pow
-import java.nio.charset.StandardCharsets
 import kotlin.math.log2
 import kotlin.math.pow
 
@@ -19,41 +18,8 @@ data class Solve(val mode:String, val input: File, val output: File) {
         }
     }
 
-    private fun encode() {
-        var inputText = ""
-        input.bufferedReader().use {
-            inputText = it.readText()
-        }
-        println("input text: $inputText")
-        var bwt = bwt(inputText)
-        println(bwt)
-        println("decoded text: ${decodeBwt(bwt)}")
 
-
-//        bwt = BWT("BCABAAA", 1)
-        val mtf = mtf(bwt.text)
-        println("mtd text: ${mtf.intList}")
-        println("mtd alph: ${mtf.alphavit}")
-        println("deco mtf: ${decodeMtf(mtf)}")
-
-
-        FileOutputStream(output).use { writer ->
-            mtf.intList.forEach {
-                val charCode = it.toString().first().code
-                println("____ $charCode")
-                println("____ ${charCode.toString(2)}")
-                val tmp = log2(charCode.toFloat()).toInt()
-                val firstPart = "1".repeat(tmp) + "0"
-                println("first: ${firstPart}")
-                val second = (charCode - 2.0.pow(tmp).toInt()).toString(2)
-                println("second: ${second}")
-                val res = firstPart + second
-                println("res: ${res}")
-                writer.write(res.toByteArray())
-            }
-        }
-
-//        var allText = ""
+    private fun decode() {
         println("try decode")
         var counter = 0
         val resMessage = StringBuilder()
@@ -89,35 +55,47 @@ data class Solve(val mode:String, val input: File, val output: File) {
             }
 //            allText = reader.readText()
         }
+    }
 
-        println("decoded MESSAGE: ${resMessage}")
+    private fun encode() {
+        input.bufferedReader().use {
+            val bwt = bwt(it.readText())
+            val mtf = mtf(bwt.text)
+            monotoneCode(mtf)
+        }
+    }
 
-//        for (char in allText) {
-//            if (char == '1') {
-//                counter++
-//                continue
-//            } else {
-//                val f1 = pow(2.0, counter.toDouble())
-//                counter = 0
-//
-//            }
-//        /
-
+    private fun monotoneCode(mtf: MTF) {
+        FileOutputStream(output).use { writer ->
+            mtf.intList.forEach {
+                val code = it.toString().first().code //like 49 for '0'
+                val base = log2(code.toFloat()).toInt()
+                val leftPart = "1".repeat(base) + "0"
+                val rightPart = (code - 2.0.pow(base).toInt()).toString(2)
+                val word = leftPart + rightPart
+                writer.write(word.toByteArray())
+//                println("____ $charCode")
+//                println("____ ${charCode.toString(2)}")
+//                println("first: ${firstPart}")
+//                println("second: ${second}")
+//                println("word: $word")
+            }
+        }
     }
 
     private fun mtf(text: String): MTF {
         var index: Int
-        val beginAlph = text.toSortedSet().toMutableList()
-        val alphavit = beginAlph.toMutableList()
+        val beginAlphabet = text.toSortedSet().toMutableList()
+        val alphabet = beginAlphabet.toMutableList()
         val resList = mutableListOf<Int>()
         text.forEach { char ->
-            index = alphavit.indexOf(char)
+            index = alphabet.indexOf(char)
             resList.add(index)
-            alphavit.removeAt(index)
-            alphavit.add(0, char)
+            alphabet.removeAt(index)
+            alphabet.add(0, char)
         }
 
-        return MTF(resList, beginAlph)
+        return MTF(resList, beginAlphabet)
     }
 
     private fun decodeMtf(mtf: MTF): String {
@@ -145,19 +123,16 @@ data class Solve(val mode:String, val input: File, val output: File) {
     }
 
     private fun bwt(inputText: String): BWT {
-        val tree = cycleShift(inputText)
-        val lastColumnText = StringBuilder()
-        var numberText = 0
-        tree.forEachIndexed { index, elem ->
-            lastColumnText.append(elem.last())
-            if (elem == inputText) numberText = index
+        val matrix = cycleShift(inputText)
+        val sb = StringBuilder()
+        var shiftId = 0
+
+        matrix.forEachIndexed { index, elem ->
+            sb.append(elem.last())
+            if (elem == inputText) shiftId = index
         }
 
-        tree.forEach {
-            println(it)
-        }
-
-        return BWT(lastColumnText.toString(), numberText)
+        return BWT(sb.toString(), shiftId)
     }
 
     private fun decodeBwt(bwt: BWT): String {
@@ -180,9 +155,6 @@ data class Solve(val mode:String, val input: File, val output: File) {
         return list[bwt.index]
     }
 
-    private fun decode() {
-
-    }
 
     data class BWT(val text: String, val index: Int)
 
