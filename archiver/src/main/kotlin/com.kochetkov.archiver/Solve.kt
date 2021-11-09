@@ -13,6 +13,7 @@ data class Solve(val mode:String, val input: File, val output: File) {
         println("output file: ${output.absolutePath}")
         if (mode == "encode") {
             encode()
+            decode()
         } else {
             decode()
         }
@@ -33,27 +34,24 @@ data class Solve(val mode:String, val input: File, val output: File) {
                 if (char == '1') {
                     counter++
                 } else {
-                    val f1 = pow(2.0, counter.toDouble())
+                    val leftPart = pow(2.0, counter.toDouble()).toInt()
                     val sb = StringBuilder()
                     while (counter > 0) {
                         sb.append(reader.read().toChar())
                         counter--
                     }
-                    val sum = f1.toInt() + Integer.getInteger(sb.toString(), 2)
-                    println("d1: ${f1.toInt()}   d2: ${Integer.getInteger(sb.toString(), 2)}")
+                    val rightPart = Integer.parseInt(sb.toString(), 2)
+                    val sum = leftPart + rightPart
 
-                    val wasChar = sum.toChar()
-                    resMessage.append(wasChar)
-                    println("wasChar: $wasChar")
-                    println("wasChar int: ${wasChar.toInt()}")
-                    //sec = (charCode - 2.0.pow(tmp).toInt()).toString(2)
-//                    val firstPart = log2(charCode.toFloat()).toInt()
-//                    val firstPart2 = log2(charCode.toFloat()).toInt()
-                    counter = 0
-
+                    val character = sum.toChar()
+                    resMessage.append(character)
+//                    println("___")
+//                    println("left: $leftPart   right: $rightPart")
+//                    println("Char: $character")
+//                    println("char code: ${character.code}")
                 }
             }
-//            allText = reader.readText()
+            println(resMessage)
         }
     }
 
@@ -66,9 +64,10 @@ data class Solve(val mode:String, val input: File, val output: File) {
     }
 
     private fun monotoneCode(mtf: MTF) {
+        println(mtf.intList)
         FileOutputStream(output).use { writer ->
             mtf.intList.forEach {
-                val code = it.toString().first().code //like 49 for '0'
+                val code = it.toString().first().code //like 49 for '1'
                 val base = log2(code.toFloat()).toInt()
                 val leftPart = "1".repeat(base) + "0"
                 val rightPart = (code - 2.0.pow(base).toInt()).toString(2)
@@ -78,7 +77,7 @@ data class Solve(val mode:String, val input: File, val output: File) {
 //                println("____ ${charCode.toString(2)}")
 //                println("first: ${firstPart}")
 //                println("second: ${second}")
-//                println("word: $word")
+                println("word: $word")
             }
         }
     }
