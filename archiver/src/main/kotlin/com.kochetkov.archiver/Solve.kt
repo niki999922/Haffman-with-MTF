@@ -1,6 +1,7 @@
 package com.kochetkov.archiver
 
 import java.io.File
+import java.io.FileOutputStream
 import java.lang.Math.pow
 import kotlin.math.log2
 import kotlin.math.pow
@@ -36,23 +37,19 @@ data class Solve(val mode:String, val input: File, val output: File) {
 
 
 
-        val r2 = mutableListOf<String>()
-        mtf.intList.forEach {
-            val charCode = it.toString().first().code
-            println("____ $charCode")
-            val tmp = log2(charCode.toFloat()).toInt()
-            val firstPart = "1".repeat(tmp + 1) + "0"
-            println("first: ${firstPart}")
-            val second = (charCode - 2.0.pow(tmp).toInt()).toString(2)
-            println("second: ${second}")
-            val res = firstPart + second
-            println("res: ${res}")
-            r2.add(res)
-        }
-
-        output.bufferedWriter().use { writer ->
-            r2.forEach {
-                writer.append(it)
+        FileOutputStream(output).use { writer ->
+            mtf.intList.forEach {
+                val charCode = it.toString().first().code
+                println("____ $charCode")
+                println("____ ${charCode.toString(2)}")
+                val tmp = log2(charCode.toFloat()).toInt()
+                val firstPart = "1".repeat(tmp) + "0"
+                println("first: ${firstPart}")
+                val second = (charCode - 2.0.pow(tmp).toInt()).toString(2)
+                println("second: ${second}")
+                val res = firstPart + second
+                println("res: ${res}")
+                writer.write(res.toByteArray())
             }
         }
     }
