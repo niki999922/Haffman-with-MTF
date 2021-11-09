@@ -52,6 +52,7 @@ data class Solve(val mode:String, val input: File, val output: File) {
                 }
             }
             println(resMessage)
+//            decodeMtf(MTF())
         }
     }
 
@@ -59,27 +60,40 @@ data class Solve(val mode:String, val input: File, val output: File) {
         input.bufferedReader().use {
             val bwt = bwt(it.readText())
             val mtf = mtf(bwt.text)
-            monotoneCode(mtf)
+            monotoneCode(bwt, mtf)
         }
     }
 
-    private fun monotoneCode(mtf: MTF) {
+    private fun monotoneCode(bwt: BWT, mtf: MTF) {
         println(mtf.intList)
-        FileOutputStream(output).use { writer ->
+        output.bufferedWriter().use { writer ->
+            writer.write(monotone(bwt.index))
+            println("bwt.index: ${bwt.index}")
+            writer.write("_")
+            mtf.alphavit
+
+
             mtf.intList.forEach {
-                val code = it.toString().first().code //like 49 for '1'
-                val base = log2(code.toFloat()).toInt()
-                val leftPart = "1".repeat(base) + "0"
-                val rightPart = (code - 2.0.pow(base).toInt()).toString(2)
-                val word = leftPart + rightPart
-                writer.write(word.toByteArray())
+                writer.write(monotone(it))
 //                println("____ $charCode")
 //                println("____ ${charCode.toString(2)}")
 //                println("first: ${firstPart}")
 //                println("second: ${second}")
-                println("word: $word")
+                println("word: ${monotone(it)}")
             }
         }
+    }
+
+    private fun monotone(input: Int): String {
+        val code = input.toString().first().code //like 49 for '1'
+        val base = log2(code.toFloat()).toInt()
+        val leftPart = "1".repeat(base) + "0"
+        val rightPart = (code - 2.0.pow(base).toInt()).toString(2)
+        return leftPart + rightPart
+//                println("____ $charCode")
+//                println("____ ${charCode.toString(2)}")
+//                println("first: ${firstPart}")
+//                println("second: ${second}")
     }
 
     private fun mtf(text: String): MTF {
