@@ -1,4 +1,4 @@
-package com.jetbrains.qodana.sarif
+package com.kochetkov.archiver
 
 import java.io.File
 import java.nio.file.Path
