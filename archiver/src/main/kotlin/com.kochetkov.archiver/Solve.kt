@@ -13,7 +13,7 @@ data class Solve(val mode: String, val input: File, val output: File) {
     private val testFile = File("decoded-text.txt")
 
     fun solve() {
-        println("Used mode: \'encode\'")
+        println("Used mode: \'$mode\'")
         println("input file: ${input.absolutePath}")
         println("output file: ${output.absolutePath}")
         if (mode == "encode") {
@@ -29,17 +29,33 @@ data class Solve(val mode: String, val input: File, val output: File) {
         var textByte = Files.readAllBytes(input.toPath())
 //        val index = textByte.toMutableList().subList(0, 4).toByteArray()
         val index = ByteBuffer.wrap(textByte.toMutableList().subList(0, 4).toByteArray()).int
-        textByte = textByte.drop(4).toByteArray()
+        var indList = mutableListOf<Int>()
+        for (ind in 0 until index) {
+            var indexRead = ByteBuffer.wrap(textByte.toMutableList().subList(ind + 4, ind + 5).toByteArray()).get().toInt()
+            if (indexRead < 0) {
+                indexRead += 256
+            }
+            indList.add(indexRead)
+        }
+        textByte = textByte.drop(index + 4).toByteArray()
         val mtf = deMonotoneCode(textByte)
         println("__________Decode_____")
-        printArray(mtf.byteArray)
-        println("numbers: ${mtf.byteArray.contentToString()}")
-        val bwt = BWT(decodeMtf(mtf), index)
+//        printArray(mtf.byteArray)
+//        println("numbers: ${mtf.byteArray.contentToString()}")
+        var decodedMTF = decodeMtf(mtf)
+        var biteArr = mutableListOf<Byte>()
+        print("index list for polina love ($index): ${indList}")
+        decodedMTF.toList().chunked(255).forEachIndexed { ind, chunk ->
+            val bwt = BWT(chunk.toByteArray(), indList[ind])
+            biteArr.addAll(decodeBwt(bwt).toList())
+        }
+//        val bwt = BWT(decodeMtf(mtf), index)
         println("start bwt")
-        println("mtf -> bwt: " + bwt.byteArray.contentToString())
-        printArray(bwt.byteArray)
-        val res = decodeBwt(bwt)
-        printArray(res)
+//        println("mtf -> bwt: " + bwt.byteArray.contentToString())
+//        printArray(bwt.byteArray)
+//        val res = decodeBwt(bwt)
+        val res = biteArr.toByteArray()
+//        printArray(res)
         output.writeBytes(res)
     }
 
@@ -66,7 +82,7 @@ data class Solve(val mode: String, val input: File, val output: File) {
 
 
 
-        println("biteList decode: ${biteList.bites.chunked(8).joinToString(" ") { it.joinToString("") { if (it) "1" else "0" } }}")
+//        println("biteList decode: ${biteList.bites.chunked(8).joinToString(" ") { it.joinToString("") { if (it) "1" else "0" } }}")
         return MTF(biteList.toRealByteArray())
     }
 
@@ -78,47 +94,62 @@ data class Solve(val mode: String, val input: File, val output: File) {
     }
 
     private fun encode() {
-        val textByte = Files.readAllBytes(input.toPath())
-        printArray(textByte)
+        var textByte = Files.readAllBytes(input.toPath())
+//        printArray(textByte)
         println("start bwt")
-        val bwt = bwt(textByte)
+        val indexes = mutableListOf<Int>()
+        val newBytes = mutableListOf<Byte>()
+        textByte.toList().chunked(255).forEach {
+            val res = bwt(it.toByteArray())
+            newBytes.addAll(res.byteArray.toList())
+            indexes.add(res.index)
+        }
+        println("index listtt: ${indexes}")
+        output.writeBytes(transformIndexToByte(indexes.size))
+        indexes.forEach {
+            output.appendBytes(listOf(it.toByte()).toByteArray())
+//            output.appendBytes(ByteBuffer.allocate(1).putInt(it.toByte()).array())
+        }
+        textByte = newBytes.toByteArray()
+//        output.appendBytes()
+//        val bwt = bwt(textByte)
 //        println("index: ${bwt.index}")
-        println("bwt -> mtf: " + bwt.byteArray.contentToString())
-        printArray(bwt.byteArray)
+//        println("bwt -> mtf: " + textByte.contentToString())
+//        printArray(textByte)
 //        println("--------------------")
 //        println(bwt.index)
         println("start mtf")
-        val mtf = mtf(bwt)
+        val mtf = mtf(BWT(textByte, 0))
 //        println("Uncode")
-        printArray(mtf.byteArray)
+//        printArray(mtf.byteArray)
 //        println(mtf.byteArray.contentToString())
 //        printArray(mtf.byteArray)
 //        println("start write output")
-        monotoneCode(mtf, bwt.index)
+        monotoneCode(mtf)
     }
 
-    private fun monotoneCode(mtf: MTF, index: Int) {
+    private fun monotoneCode(mtf: MTF) {
 //        output.writeBytes(mtf.byteArray)
 //        println("monotipe:")
         val biteList = BiteList()
-        println("numbers: ${mtf.byteArray.contentToString()}")
-        print("converterByteee: ")
+//        println("numbers: ${mtf.byteArray.contentToString()}")
+//        print("converterByteee: ")
         mtf.byteArray.forEach { byte ->
             biteList.bites.apply {
 //                println("byte: $byte")
                 val l = monotone(byte)
-                print("${l.joinToString("") {if (it) "1" else "0"}} ")
+//                print("${l.joinToString("") {if (it) "1" else "0"}} ")
                 addAll(l)
             }
         }
         println()
 //        print("biteList encode last: ")
 //        printArray(biteList.toByteArray())
-        println("index: $index ___ byte arr: ${transformIndexToByte(index).contentToString()}")
-        output.writeBytes(transformIndexToByte(index))
+//        println("index: $index ___ byte arr: ${transformIndexToByte(index).contentToString()}")
+//        output.writeBytes(transformIndexToByte(index))
         output.appendBytes(biteList.toByteArray())
 
-        println("biteList encode: ${biteList.bites.chunked(8).joinToString(" ") { it.joinToString("") { if (it) "1" else "0" } }}")
+//        println("biteList encode: ${biteList.bites.chunked(8).joinToString(" ") { it.joinToString("") { if (it) "1" else "0" } }}")
 //        biteList.toByteArray()
     }
 

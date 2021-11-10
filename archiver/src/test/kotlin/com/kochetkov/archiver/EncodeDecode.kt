@@ -15,6 +15,11 @@ class EncodeDecode {
     }
 
     @Test
+    fun `have to encode decode correct testtxt2`(){
+        testFile(File("/Users/nikita.kochetkov/Haffman-with-MTF/calgarycorpus/test2.txt"))
+    }
+
+    @Test
     fun `have to encode decode correct bib`(){
         testFile(File("/Users/nikita.kochetkov/Haffman-with-MTF/calgarycorpus/bib"))
     }
