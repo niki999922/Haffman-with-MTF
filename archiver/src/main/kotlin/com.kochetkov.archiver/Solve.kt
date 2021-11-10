@@ -1,7 +1,6 @@
 package com.kochetkov.archiver
 
-import java.io.*
-import java.lang.Math.pow
+import java.io.File
 import java.math.BigInteger
 import java.nio.ByteBuffer
 import java.nio.file.Files
@@ -17,7 +16,7 @@ data class Solve(val mode: String, val input: File, val output: File) {
         println("output file: ${output.absolutePath}")
         if (mode == "encode") {
             encode()
-//            decode()
+            decode()
         } else {
             decode()
         }
@@ -25,39 +24,38 @@ data class Solve(val mode: String, val input: File, val output: File) {
 
 
     private fun decode() {
-        println("try decode")
-        var counter = 0
-        val resMessage = StringBuilder()
-        output.bufferedReader().use { reader ->
-            while (true) {
-                val readValue = reader.read()
-                if (readValue == -1) {
-                    break
-                }
-                val char = readValue.toChar()
-                if (char == '1') {
-                    counter++
-                } else {
-                    val leftPart = pow(2.0, counter.toDouble()).toInt()
-                    val sb = StringBuilder()
-                    while (counter > 0) {
-                        sb.append(reader.read().toChar())
-                        counter--
-                    }
-                    val rightPart = Integer.parseInt(sb.toString(), 2)
-                    val sum = leftPart + rightPart
+        val textByte = Files.readAllBytes(output.toPath())
+        val mtf = deMonotoneCode(textByte)
+        println("Decode")
+        printArray(mtf.byteArray)
+        println("numbers: ${mtf.byteArray.contentToString()}")
+    }
 
-                    val character = sum.toChar()
-                    resMessage.append(character)
-//                    println("___")
-//                    println("left: $leftPart   right: $rightPart")
-//                    println("Char: $character")
-//                    println("char code: ${character.code}")
-                }
+    private fun deMonotoneCode(byteArray: ByteArray): MTF {
+        println("decode monotone:")
+        val biteList = BiteList()
+//            println(String.format("%8s", Integer.toBinaryString((byteArray[1] and 0xFF.toByte()).toInt()).replace(' ', '0')))
+        val bitSet = BitSet.valueOf(byteArray)
+        val bytTmp = mutableListOf<Boolean>()
+        for (index in 0 until bitSet.length()) {
+            if (index % 8 == 0) {
+                bytTmp.reversed().forEach { biteList.bites.add(it)}
+                bytTmp.clear()
+                bytTmp.add(bitSet[index])
+            } else {
+                bytTmp.add(bitSet[index])
             }
-            println(resMessage)
-//            decodeMtf(MTF())
         }
+        while (bytTmp.size < 8) {
+            bytTmp.add(false)
+        }
+        bytTmp.reversed().forEach { biteList.bites.add(it)}
+        bytTmp.clear()
+
+
+
+        println("biteList decode: ${biteList.bites.chunked(8).joinToString(" ") { it.joinToString("") { if (it) "1" else "0" } }}")
+        return MTF(biteList.toRealByteArray())
     }
 
     private fun printArray(arr: ByteArray) {
@@ -69,43 +67,51 @@ data class Solve(val mode: String, val input: File, val output: File) {
 
     private fun encode() {
         val textByte = Files.readAllBytes(input.toPath())
-        printArray(textByte)
+//        printArray(textByte)
         println("start bwt")
         val bwt = bwt(textByte)
-        println(bwt.byteArray.contentToString())
-        printArray(bwt.byteArray)
-        println("--------------------")
+//        println(bwt.byteArray.contentToString())
+//        printArray(bwt.byteArray)
+//        println("--------------------")
 //        println(bwt.index)
         println("start mtf")
         val mtf = mtf(bwt)
-        println(mtf.byteArray.contentToString())
+        println("Uncode")
         printArray(mtf.byteArray)
-        println("start write output")
+//        println(mtf.byteArray.contentToString())
+//        printArray(mtf.byteArray)
+//        println("start write output")
         monotoneCode(mtf)
     }
 
     private fun monotoneCode(mtf: MTF) {
 //        output.writeBytes(mtf.byteArray)
-        println("monotipe:")
+//        println("monotipe:")
         val biteList = BiteList()
+        println("numbers: ${mtf.byteArray.contentToString()}")
+        print("converterByteee: ")
         mtf.byteArray.forEach { byte ->
             biteList.bites.apply {
-                println("byte: $byte")
+//                println("byte: $byte")
                 val l = monotone(byte)
-                println("converterByte: ${l.joinToString("") {if (it) "1" else "0"}}")
+                print("${l.joinToString("") {if (it) "1" else "0"}} ")
                 addAll(l)
             }
         }
-
+        println()
+//        print("biteList encode last: ")
+//        printArray(biteList.toByteArray())
         output.writeBytes(biteList.toByteArray())
+        println("biteList encode: ${biteList.bites.chunked(8).joinToString(" ") { it.joinToString("") { if (it) "1" else "0" } }}")
 //        biteList.toByteArray()
     }
 
     private fun monotone(byte: Byte): List<Boolean> {
-        // like 49 for '1'
-        val base = log2(byte.toFloat()).toInt()
+        val base = log2(byte.toFloat()).toInt() //1111110 000011
         val leftPart = "1".repeat(base) + "0"
-        val rightPart = (byte - 2.0.pow(base).toInt()).toString(2)
+
+        val rightPart = (byte).toString(2).removeRange(0,1)
+//        val rightPart2 = (byte - 2.0.pow(base).toInt()).toString(2)
         return mutableListOf<Boolean>().apply {
             (leftPart + rightPart).forEach {
                 add(it == '1')
@@ -217,10 +223,48 @@ class BiteList {
     val bites = mutableListOf<Boolean>()
 
     fun toByteArray(): ByteArray {
+        println(BigInteger("000100", 2).toByte())
+        while (bites.size % 8 != 0) {
+            bites.add(true)
+        }
         return bites.chunked(8) { chunk ->
             BigInteger(chunk.joinToString(separator = "") {
                 if (it) "1" else "0"
             }, 2).toByte()
         }.toByteArray()
+//        return l
+    }
+
+    fun toRealByteArray(): ByteArray {
+        val byteList = mutableListOf<Byte>()
+        var index = 0
+        while (index < bites.size) {
+            if (bites[index]) {
+                var amountOne = 0
+                val stringBuilderRight = StringBuilder()
+
+                while (index < bites.size && bites[index]) {
+                    amountOne++
+                    index++
+                }
+                index++
+                if (index >= bites.size) {
+                    break
+                }
+                for (ignore in 0 until amountOne) {
+                    stringBuilderRight.append(if (bites[index]) "1" else "0")
+                    index++
+                }
+
+                val left = 2.0.pow(amountOne.toDouble()).toInt()
+                val right = BigInteger(stringBuilderRight.toString(), 2).toInt()
+                val res = (left + right).toByte()
+                byteList.add(res)
+            } else {
+                byteList.add(BigInteger("1").toByte())
+                index++
+            }
+        }
+        return byteList.toByteArray()
     }
 }
