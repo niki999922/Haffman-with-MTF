@@ -2,7 +2,9 @@ package com.kochetkov.archiver
 
 import java.io.*
 import java.lang.Math.pow
+import java.nio.ByteBuffer
 import java.nio.file.Files
+import java.util.*
 import kotlin.math.log2
 import kotlin.math.pow
 
@@ -14,7 +16,7 @@ data class Solve(val mode: String, val input: File, val output: File) {
         println("output file: ${output.absolutePath}")
         if (mode == "encode") {
             encode()
-            decode()
+//            decode()
         } else {
             decode()
         }
@@ -57,10 +59,23 @@ data class Solve(val mode: String, val input: File, val output: File) {
         }
     }
 
+    private fun printArray(arr: ByteArray) {
+        for (i in arr.indices) {
+            print(arr[i].toChar())
+        }
+        println()
+    }
+
     private fun encode() {
-        var textByte = Files.readAllBytes(input.toPath())
+        val textByte = Files.readAllBytes(input.toPath())
+        printArray(textByte)
+        println("start bwt")
         val bwt = bwt(textByte)
+        printArray(bwt.byteArray)
+        println("start mtf")
         val mtf = mtf(bwt)
+        printArray(mtf.byteArray)
+        println("start write output")
         monotoneCode(mtf)
     }
 
@@ -84,12 +99,12 @@ data class Solve(val mode: String, val input: File, val output: File) {
 //    var text = bwt.byteArray.toString()
         var index: Int
 
-        val alphabet = generateSequence(0.toByte()) { if (it < 256) (it + 1).toByte() else null }.toMutableList()
+        val alphabet = generateSequence(0.toByte()) { if (it.toInt() < 256) (it.toInt() + 1).toByte() else null }.take(256).toMutableList()
 //    val beginAlphabet = text.toSortedSet().toMutableList()
 
 
         val resList = mutableListOf<Byte>()
-        bwt.byteArray.plus(bwt.index.toByte()).forEach { byte ->
+        bwt.byteArray.plus(transformIndexToByte(bwt.index)).forEach { byte ->
             index = alphabet.indexOfFirst { value ->
                 value == byte
             }
@@ -101,34 +116,43 @@ data class Solve(val mode: String, val input: File, val output: File) {
         return MTF(resList.toByteArray())
     }
 
+    private fun transformIndexToByte(index: Int): ByteArray {
+        return ByteBuffer.allocate(4).putInt(index).array()
+    }
+
     private fun decodeMtf(mtf: MTF): String {
         var char: Char
-        val alphavit = mtf.alphavit.toMutableList()
+//        val alphavit = mtf.alphavit.toMutableList()
         val sb = StringBuilder()
-        mtf.intList.forEach { ind ->
-            char = alphavit[ind]
-            sb.append(char)
-            alphavit.removeAt(ind)
-            alphavit.add(0, char)
-        }
+//        mtf.intList.forEach { ind ->
+//            char = alphavit[ind]
+//            sb.append(char)
+//            alphavit.removeAt(ind)
+//            alphavit.add(0, char)
+//        }
 
         return sb.toString()
     }
 
     private fun cycleShift(byteArray: ByteArray): MutableList<ByteArray> {
         return mutableListOf<ByteArray>().apply {
-            var counter = byteArray.size - 1
-            while (counter >= 0) {
+            var counter = 0
+//            println("__________")
+
+            while (counter < byteArray.size) {
+                //ABACABA
                 val byteArrTmp = ByteArray(byteArray.size)
                 System.arraycopy(byteArray, counter, byteArrTmp, 0, byteArray.size - counter)
                 System.arraycopy(byteArray, 0, byteArrTmp, byteArray.size - counter, counter)
 //                byteArray.substring(0, counter)
 //                add(byteArray.sub(counter, byteArray.length) + byteArray.substring(0, counter))
+//                printArray(byteArrTmp)
                 add(byteArrTmp)
-                counter--
+                counter++
             }
+//            println("__________")
         }.sortedWith { o1, o2 ->
-            o1.toString().compareTo(o2.toString())
+            Arrays.compare(o1, o2)
         }.toMutableList()
     }
 
@@ -147,22 +171,23 @@ data class Solve(val mode: String, val input: File, val output: File) {
 
     private fun decodeBwt(bwt: BWT): String {
         val list = mutableListOf<String>()
-        bwt.text.forEach {
-            list.add(it.toString())
-        }
-        list.sort()
-        for (i in 0 until bwt.text.length - 1) {
-            for (index in 0 until bwt.text.length) {
-                list[index] = bwt.text[index] + list[index]
-            }
-            list.sort()
-        }
+//        bwt.text.forEach {
+//            list.add(it.toString())
+//        }
+//        list.sort()
+//        for (i in 0 until bwt.text.length - 1) {
+//            for (index in 0 until bwt.text.length) {
+//                list[index] = bwt.text[index] + list[index]
+//            }
+//            list.sort()
+//        }
 
-        list.forEach {
-            println(it)
-        }
+//        list.forEach {
+//            println(it)
+//        }
 
-        return list[bwt.index]
+//        return list[bwt.index]
+        return ""
     }
 }
 
