@@ -1,12 +1,13 @@
 package com.kochetkov.archiver
 
-import java.io.File
-import java.io.FileOutputStream
+import java.io.*
 import java.lang.Math.pow
+import java.nio.file.Files
 import kotlin.math.log2
 import kotlin.math.pow
 
-data class Solve(val mode:String, val input: File, val output: File) {
+
+data class Solve(val mode: String, val input: File, val output: File) {
     fun solve() {
         println("Used mode: \'encode\'")
         println("input file: ${input.absolutePath}")
@@ -25,7 +26,7 @@ data class Solve(val mode:String, val input: File, val output: File) {
         var counter = 0
         val resMessage = StringBuilder()
         output.bufferedReader().use { reader ->
-            while(true) {
+            while (true) {
                 val readValue = reader.read()
                 if (readValue == -1) {
                     break
@@ -57,31 +58,14 @@ data class Solve(val mode:String, val input: File, val output: File) {
     }
 
     private fun encode() {
-        input.bufferedReader().use {
-            val bwt = bwt(it.readText())
-            val mtf = mtf(bwt.text)
-            monotoneCode(bwt, mtf)
-        }
+        var textByte = Files.readAllBytes(input.toPath())
+        val bwt = bwt(textByte)
+        val mtf = mtf(bwt)
+        monotoneCode(mtf)
     }
 
-    private fun monotoneCode(bwt: BWT, mtf: MTF) {
-        println(mtf.intList)
-        output.bufferedWriter().use { writer ->
-            writer.write(monotone(bwt.index))
-            println("bwt.index: ${bwt.index}")
-            writer.write("_")
-            mtf.alphavit
-
-
-            mtf.intList.forEach {
-                writer.write(monotone(it))
-//                println("____ $charCode")
-//                println("____ ${charCode.toString(2)}")
-//                println("first: ${firstPart}")
-//                println("second: ${second}")
-                println("word: ${monotone(it)}")
-            }
-        }
+    private fun monotoneCode(mtf: MTF) {
+        output.writeBytes(mtf.byteArray)
     }
 
     private fun monotone(input: Int): String {
@@ -96,19 +80,25 @@ data class Solve(val mode:String, val input: File, val output: File) {
 //                println("second: ${second}")
     }
 
-    private fun mtf(text: String): MTF {
+    private fun mtf(bwt: BWT): MTF {
+//    var text = bwt.byteArray.toString()
         var index: Int
-        val beginAlphabet = text.toSortedSet().toMutableList()
-        val alphabet = beginAlphabet.toMutableList()
-        val resList = mutableListOf<Int>()
-        text.forEach { char ->
-            index = alphabet.indexOf(char)
-            resList.add(index)
+
+        val alphabet = generateSequence(0.toByte()) { if (it < 256) (it + 1).toByte() else null }.toMutableList()
+//    val beginAlphabet = text.toSortedSet().toMutableList()
+
+
+        val resList = mutableListOf<Byte>()
+        bwt.byteArray.plus(bwt.index.toByte()).forEach { byte ->
+            index = alphabet.indexOfFirst { value ->
+                value == byte
+            }
+            resList.add(index.toByte())
             alphabet.removeAt(index)
-            alphabet.add(0, char)
+            alphabet.add(0, byte)
         }
 
-        return MTF(resList, beginAlphabet)
+        return MTF(resList.toByteArray())
     }
 
     private fun decodeMtf(mtf: MTF): String {
@@ -125,27 +115,34 @@ data class Solve(val mode:String, val input: File, val output: File) {
         return sb.toString()
     }
 
-    private fun cycleShift(input: String): MutableList<String> {
-        return mutableListOf<String>().apply {
-            var counter = input.length - 1
+    private fun cycleShift(byteArray: ByteArray): MutableList<ByteArray> {
+        return mutableListOf<ByteArray>().apply {
+            var counter = byteArray.size - 1
             while (counter >= 0) {
-                add(input.substring(counter, input.length) + input.substring(0, counter))
+                val byteArrTmp = ByteArray(byteArray.size)
+                System.arraycopy(byteArray, counter, byteArrTmp, 0, byteArray.size - counter)
+                System.arraycopy(byteArray, 0, byteArrTmp, byteArray.size - counter, counter)
+//                byteArray.substring(0, counter)
+//                add(byteArray.sub(counter, byteArray.length) + byteArray.substring(0, counter))
+                add(byteArrTmp)
                 counter--
             }
-        }.sorted().toMutableList()
+        }.sortedWith { o1, o2 ->
+            o1.toString().compareTo(o2.toString())
+        }.toMutableList()
     }
 
-    private fun bwt(inputText: String): BWT {
-        val matrix = cycleShift(inputText)
-        val sb = StringBuilder()
+    private fun bwt(byteArray: ByteArray): BWT {
+        val matrix = cycleShift(byteArray)
+        val biteArrayBuilder = ByteArray(matrix.size)
         var shiftId = 0
 
         matrix.forEachIndexed { index, elem ->
-            sb.append(elem.last())
-            if (elem == inputText) shiftId = index
+            biteArrayBuilder[index] = elem.last()
+            if (elem.contentEquals(byteArray)) shiftId = index
         }
 
-        return BWT(sb.toString(), shiftId)
+        return BWT(biteArrayBuilder, shiftId)
     }
 
     private fun decodeBwt(bwt: BWT): String {
@@ -167,9 +164,13 @@ data class Solve(val mode:String, val input: File, val output: File) {
 
         return list[bwt.index]
     }
+}
+
+data class BWT(val byteArray: ByteArray, val index: Int)
+
+data class MTF(val byteArray: ByteArray)
 
 
-    data class BWT(val text: String, val index: Int)
-
-    data class MTF(val intList: List<Int>, val alphavit: List<Char>)
+class BiteList {
+    val bites = mutableListOf<Boolean>()
 }
