@@ -2,6 +2,7 @@ package com.kochetkov.archiver
 
 import java.io.*
 import java.lang.Math.pow
+import java.math.BigInteger
 import java.nio.ByteBuffer
 import java.nio.file.Files
 import java.util.*
@@ -71,44 +72,60 @@ data class Solve(val mode: String, val input: File, val output: File) {
         printArray(textByte)
         println("start bwt")
         val bwt = bwt(textByte)
+        println(bwt.byteArray.contentToString())
         printArray(bwt.byteArray)
+        println("--------------------")
+//        println(bwt.index)
         println("start mtf")
         val mtf = mtf(bwt)
+        println(mtf.byteArray.contentToString())
         printArray(mtf.byteArray)
         println("start write output")
         monotoneCode(mtf)
     }
 
     private fun monotoneCode(mtf: MTF) {
-        output.writeBytes(mtf.byteArray)
+//        output.writeBytes(mtf.byteArray)
+        println("monotipe:")
+        val biteList = BiteList()
+        mtf.byteArray.forEach { byte ->
+            biteList.bites.apply {
+                println("byte: $byte")
+                val l = monotone(byte)
+                println("converterByte: ${l.joinToString("") {if (it) "1" else "0"}}")
+                addAll(l)
+            }
+        }
+
+        output.writeBytes(biteList.toByteArray())
+//        biteList.toByteArray()
     }
 
-    private fun monotone(input: Int): String {
-        val code = input.toString().first().code //like 49 for '1'
-        val base = log2(code.toFloat()).toInt()
+    private fun monotone(byte: Byte): List<Boolean> {
+        // like 49 for '1'
+        val base = log2(byte.toFloat()).toInt()
         val leftPart = "1".repeat(base) + "0"
-        val rightPart = (code - 2.0.pow(base).toInt()).toString(2)
-        return leftPart + rightPart
-//                println("____ $charCode")
-//                println("____ ${charCode.toString(2)}")
-//                println("first: ${firstPart}")
-//                println("second: ${second}")
+        val rightPart = (byte - 2.0.pow(base).toInt()).toString(2)
+        return mutableListOf<Boolean>().apply {
+            (leftPart + rightPart).forEach {
+                add(it == '1')
+            }
+        }
     }
 
     private fun mtf(bwt: BWT): MTF {
-//    var text = bwt.byteArray.toString()
         var index: Int
 
         val alphabet = generateSequence(0.toByte()) { if (it.toInt() < 256) (it.toInt() + 1).toByte() else null }.take(256).toMutableList()
-//    val beginAlphabet = text.toSortedSet().toMutableList()
 
 
         val resList = mutableListOf<Byte>()
-        bwt.byteArray.plus(transformIndexToByte(bwt.index)).forEach { byte ->
+//        bwt.byteArray.plus(transformIndexToByte(bwt.index)).forEach { byte ->
+        bwt.byteArray.forEach { byte ->
             index = alphabet.indexOfFirst { value ->
                 value == byte
             }
-            resList.add(index.toByte())
+            resList.add((index + 1).toByte())
             alphabet.removeAt(index)
             alphabet.add(0, byte)
         }
@@ -198,4 +215,12 @@ data class MTF(val byteArray: ByteArray)
 
 class BiteList {
     val bites = mutableListOf<Boolean>()
+
+    fun toByteArray(): ByteArray {
+        return bites.chunked(8) { chunk ->
+            BigInteger(chunk.joinToString(separator = "") {
+                if (it) "1" else "0"
+            }, 2).toByte()
+        }.toByteArray()
+    }
 }
