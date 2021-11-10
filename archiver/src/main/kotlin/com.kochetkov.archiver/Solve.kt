@@ -40,7 +40,7 @@ data class Solve(val mode: String, val input: File, val output: File) {
         printArray(bwt.byteArray)
         val res = decodeBwt(bwt)
         printArray(res)
-        testFile.writeBytes(res)
+        output.writeBytes(res)
     }
 
     private fun deMonotoneCode(byteArray: ByteArray): MTF {

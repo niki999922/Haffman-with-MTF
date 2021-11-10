@@ -27,7 +27,7 @@ class EncodeDecode {
         try {
             Main.main(listOf("encode", file.absolutePath.toString(), tempFile.toAbsolutePath().toString()).toTypedArray())
             Main.main(listOf("decode", tempFile.toAbsolutePath().toString(), tempFile2.toAbsolutePath().toString()).toTypedArray())
-//            Assert.assertArrayEquals(file.readBytes(), tempFile2.toFile().readBytes())
+            Assert.assertArrayEquals(file.readBytes(), tempFile2.toFile().readBytes())
         } finally {
             tempDirectory.toFile().deleteRecursively()
         }
