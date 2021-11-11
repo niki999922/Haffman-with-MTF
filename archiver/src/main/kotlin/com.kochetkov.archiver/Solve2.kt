@@ -9,7 +9,7 @@ import kotlin.math.log2
 import kotlin.math.pow
 
 class Solve2(val mode: String, val input: File, val output: File) {
-    private val BLOCK_SIZE = 255
+    private val BLOCK_SIZE = 250
 //    val tempFile = File("ttttt.txt")
     fun solve() {
         println("input file: ${input.absolutePath}")
@@ -52,6 +52,11 @@ class Solve2(val mode: String, val input: File, val output: File) {
 
         val resList = mutableListOf<Byte>()
         intListRes.map { it.toByte() }.toByteArray().toList().chunked(BLOCK_SIZE).forEachIndexed { ind, chunk ->
+//            println("chunk: $ind of ${intListRes.size}")
+//            if (ind % 1000 == 0) {
+//                println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+//                println("chunk: $ind of ${intListRes.size}")
+//            }
             resList.addAll(fromBwt(chunk.toByteArray(), indList[ind]).toList())
         }
 

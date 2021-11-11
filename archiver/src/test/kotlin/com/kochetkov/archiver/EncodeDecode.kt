@@ -153,8 +153,8 @@ class EncodeDecode {
 
     private fun testFile(file: File) {
         val tempDirectory = Paths.get("tempTestDirectory_1").apply { toFile().mkdirs() }
-        val tempFile = File("_${file.name}_encode_.txt").also { it.delete(); it.createNewFile() }.toPath()
-        val tempFile2 = File("_${file.name}_decode_.txt").also { it.delete(); it.createNewFile() }.toPath()
+        val tempFile = File("__${file.name}_encode_.txt").also { it.delete(); it.createNewFile() }.toPath()
+        val tempFile2 = File("__${file.name}_decode_.txt").also { it.delete(); it.createNewFile() }.toPath()
         try {
             Main.main(listOf("encode", file.absolutePath.toString(), tempFile.toAbsolutePath().toString()).toTypedArray())
             Main.main(listOf("decode", tempFile.toAbsolutePath().toString(), tempFile2.toAbsolutePath().toString()).toTypedArray())
