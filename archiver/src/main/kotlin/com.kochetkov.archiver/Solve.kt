@@ -23,6 +23,7 @@ data class Solve(val mode: String, val input: File, val output: File) {
 
 
     private fun decode() {
+        println("start read indexes")
         var textByte = Files.readAllBytes(input.toPath())
         val index = ByteBuffer.wrap(textByte.toMutableList().subList(0, 4).toByteArray()).int
         val indList = mutableListOf<Int>()
@@ -34,15 +35,19 @@ data class Solve(val mode: String, val input: File, val output: File) {
             indList.add(indexRead)
         }
         textByte = textByte.drop(index + 4).toByteArray()
+        println("start demonocode")
         val mtf = deMonotoneCode(textByte)
+        println("start decode mtf")
         val decodedMTF = decodeMtf(mtf)
         val biteArr = mutableListOf<Byte>()
+        println("start decode bwt")
         decodedMTF.toList().chunked(255).forEachIndexed { ind, chunk ->
             val bwt = BWT(chunk.toByteArray(), indList[ind])
             biteArr.addAll(decodeBwt(bwt).toList())
         }
         val res = biteArr.toByteArray()
         output.writeBytes(res)
+        println("Complete decode!")
     }
 
     private fun deMonotoneCode(byteArray: ByteArray): ByteArray {
@@ -74,17 +79,21 @@ data class Solve(val mode: String, val input: File, val output: File) {
         var textByte = Files.readAllBytes(input.toPath())
         val indexes = mutableListOf<Int>()
         val newBytes = mutableListOf<Byte>()
+        println("start bwt")
         textByte.toList().chunked(255).forEach {
             val res = bwt(it.toByteArray())
             newBytes.addAll(res.byteArray.toList())
             indexes.add(res.index)
         }
+        println("start write indexes")
         output.writeBytes(transformIndexToByte(indexes.size))
         indexes.forEach {
             output.appendBytes(listOf(it.toByte()).toByteArray())
         }
         textByte = newBytes.toByteArray()
+        println("start mtf")
         val mtf = mtf(BWT(textByte, 0))
+        println("start monocode")
         monotoneCode(mtf)
     }
 

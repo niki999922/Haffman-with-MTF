@@ -17,9 +17,7 @@ class EncodeDecode {
     }
 
     @Test
-    @Ignore
     fun `have to encode decode correct testtxt ya`(){
-        println(239.toByte())
         testFile(File("/Users/nikita.kochetkov/Haffman-with-MTF/calgarycorpus/tes3.txt"))
     }
 
@@ -155,8 +153,8 @@ class EncodeDecode {
 
     private fun testFile(file: File) {
         val tempDirectory = Paths.get("tempTestDirectory_1").apply { toFile().mkdirs() }
-        val tempFile = Files.createTempFile(Paths.get("."),"__${file.name}_encode_",".txt")
-        val tempFile2 = Files.createTempFile(Paths.get("."),"__${file.name}_decode_",".txt")
+        val tempFile = File("__${file.name}_encode_",".txt").also { it.delete(); it.createNewFile() }.toPath()
+        val tempFile2 = File("__${file.name}_decode_",".txt").also { it.delete(); it.createNewFile() }.toPath()
         try {
             Main.main(listOf("encode", file.absolutePath.toString(), tempFile.toAbsolutePath().toString()).toTypedArray())
             Main.main(listOf("decode", tempFile.toAbsolutePath().toString(), tempFile2.toAbsolutePath().toString()).toTypedArray())
