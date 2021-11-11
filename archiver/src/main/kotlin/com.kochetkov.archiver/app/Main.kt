@@ -1,7 +1,6 @@
 package com.kochetkov.archiver.app
 
 import com.kochetkov.archiver.Solve
-import com.kochetkov.archiver.Solve2
 import java.io.File
 
 class Main {
@@ -31,7 +30,7 @@ class Main {
 //            Solve(mode,inputFile,outputFile).solve()
 //            Solve2(inputFile, outputFile3).solve()
 
-            Solve2(mode, inputFile, outputFile).solve()
+            Solve(mode, inputFile, outputFile).solve()
         }
     }
 }
