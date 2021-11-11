@@ -8,20 +8,24 @@ import java.util.*
 import kotlin.math.log2
 import kotlin.math.pow
 
-class Solve2(val input: File, val output: File) {
-    val tempFile = File("ttttt.txt")
+class Solve2(val mode: String, val input: File, val output: File) {
+    private val BLOCK_SIZE = 255
+//    val tempFile = File("ttttt.txt")
     fun solve() {
         println("input file: ${input.absolutePath}")
         println("output file: ${output.absolutePath}")
-        println("Used solve2 mode: \'encode\'")
-        encode()
-        decode()
+//        println("Used solve2 mode: \'encode\'")
+        if (mode == "encode") {
+            encode()
+        } else {
+            decode()
+        }
     }
 
     private fun decode() {
         println("start read indexes")
         //TODO: DONT FORGET!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        var textByte = Files.readAllBytes(output.toPath())
+        var textByte = Files.readAllBytes(input.toPath())
         val indexAmount = ByteBuffer.wrap(textByte.toMutableList().subList(0, 4).toByteArray()).int
         val indList = mutableListOf<Int>()
         println("start bwt indexes")
@@ -37,21 +41,24 @@ class Solve2(val input: File, val output: File) {
 
         println("start convertByteArrayToBiteList")
         val biteList = convertByteArrayToBiteList(textByte)
+//        printBooleanArray(biteList, "AFTER READ DECODE")
         println("start fromMonocode")
         var intListRes = fromMonocode(biteList)
         println("start decode mtf")
+//        println("BEFORE DECODE MTF: $intListRes")
         intListRes = fromMtf(intListRes)
+//        println("AFTER DECODE MTF: $intListRes")
         println("start decode bwt")
 
         val resList = mutableListOf<Byte>()
-        intListRes.map { it.toByte() }.toByteArray().toList().chunked(255).forEachIndexed { ind, chunk ->
+        intListRes.map { it.toByte() }.toByteArray().toList().chunked(BLOCK_SIZE).forEachIndexed { ind, chunk ->
             resList.addAll(fromBwt(chunk.toByteArray(), indList[ind]).toList())
         }
 
 
         val res = resList.toByteArray()
         //TODO: DONT FORGET!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
-        tempFile.writeBytes(res)
+        output.writeBytes(res)
         println("Complete decode!")
     }
 
@@ -148,7 +155,7 @@ class Solve2(val input: File, val output: File) {
                 }
                 listInt.add(intX + intY)
             }
-            counter++
+//            counter++
         }
 
         return listInt
@@ -159,10 +166,10 @@ class Solve2(val input: File, val output: File) {
         val newInts = mutableListOf<Int>()
 
         val textByte = Files.readAllBytes(input.toPath())
-        println(textByte.toList())
+//        println(textByte.toList())
         println("start bwt")
-        textByte.toList().chunked(255).forEach {
-            val res = convertByBwt(it.toByteArray())
+        textByte.toList().chunked(BLOCK_SIZE).forEach { chunk ->
+            val res = convertByBwt(chunk.toByteArray())
             newInts.addAll(res.first.toList().map { it.toInt() })
             indexes.add(res.second)
         }
@@ -174,11 +181,12 @@ class Solve2(val input: File, val output: File) {
         }
 
         println("start mtf")
-        println(newInts)
+//        println("BEFORE MTF: $newInts")
         val listMtfIndexes = convertByMtf(newInts)
-        println(listMtfIndexes)
+//        println("AFTER MTF: $listMtfIndexes")
         println("start monocode")
         val bitList = convertToMonotoneCode(listMtfIndexes)
+//        printBooleanArray(bitList, "AFTER MONOCODE")
         println("start writing")
         writeBitList(bitList.toMutableList())
     }
@@ -262,4 +270,9 @@ class Solve2(val input: File, val output: File) {
         return result
     }
 
+
+    private fun printBooleanArray(booleanArray: List<Boolean>, name: String) {
+        println("PRINT BOOLEAN ARRAY : $name")
+        println(booleanArray.joinToString("") { if (it) "1" else "0" })
+    }
 }
