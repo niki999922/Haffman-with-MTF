@@ -57,17 +57,30 @@ data class Solve(val mode: String, val input: File, val output: File) {
         val res = biteArr.toByteArray()
 //        printArray(res)
         output.writeBytes(res)
+        println("END DECODE!!!")
     }
 
-    private fun deMonotoneCode(byteArray: ByteArray): MTF {
+    private fun deMonotoneCode(byteArray: ByteArray): ByteArray {
 //        println("decode monotone:")
         val biteList = BiteList()
+        val biteList2 = mutableListOf<Int>()
 //            println(String.format("%8s", Integer.toBinaryString((byteArray[1] and 0xFF.toByte()).toInt()).replace(' ', '0')))
         val bitSet = BitSet.valueOf(byteArray)
         val bytTmp = mutableListOf<Boolean>()
         for (index in 0 until bitSet.length()) {
             if (index % 8 == 0) {
-                bytTmp.reversed().forEach { biteList.bites.add(it)}
+                bytTmp.reversed().forEach {
+                    biteList.bites.add(it)
+//                    var i = bytTmp.size - 1
+//                    var finalInt = 0
+//                    while (i >= 0) {
+//                        if (bytTmp[i]) {
+//                            finalInt += (2.0.pow(i).toInt())
+//                        }
+//                        i--
+//                    }
+//                    biteList2.add(finalInt)
+                }
                 bytTmp.clear()
                 bytTmp.add(bitSet[index])
             } else {
@@ -77,13 +90,25 @@ data class Solve(val mode: String, val input: File, val output: File) {
         while (bytTmp.size < 8) {
             bytTmp.add(false)
         }
-        bytTmp.reversed().forEach { biteList.bites.add(it)}
+        bytTmp.reversed().forEach {
+            biteList.bites.add(it)
+//            var i = bytTmp.size - 1
+//            var finalInt = 0
+//            while (i >= 0) {
+//                if (bytTmp[i]) {
+//                    finalInt += (2.0.pow(i).toInt())
+//                }
+//                i--
+//            }
+//            biteList2.add(finalInt)
+        }
         bytTmp.clear()
 
 
 
 //        println("biteList decode: ${biteList.bites.chunked(8).joinToString(" ") { it.joinToString("") { if (it) "1" else "0" } }}")
-        return MTF(biteList.toRealByteArray())
+//        return MTF(biteList.toRealByteArray())
+        return biteList.toRealByteArray()
     }
 
     private fun printArray(arr: ByteArray) {
@@ -153,20 +178,25 @@ data class Solve(val mode: String, val input: File, val output: File) {
 //        biteList.toByteArray()
     }
 
-    fun monotone(byte: Byte): List<Boolean> {
-        val x = byte.toInt()
-        val base = if (byte.toInt() == 0) {
-            8 //111111110
-            return mutableListOf(true, true, true, true, true, true, true, true, false)
-        } else {
-//            byte.myLog()
-            log2(byte.toFloat()).toInt() //1111110 000011
+    fun monotone(byte: Int): List<Boolean> {
+        var x = byte.toInt()
+        if (x < 0) {
+            x += 256
         }
-        print("byte: ${byte.toFloat()} ")
-        println("log2: ${base}")
+
+        val base = log2(x.toFloat()).toInt()
+//        val base = if (byte.toInt() == 0) {
+//            8 //111111110
+//            return mutableListOf(true, true, true, true, true, true, true, true, false)
+//        } else {
+//            byte.myLog()
+//            log2(x.toFloat()).toInt() //1111110 000011
+//        }
+        //print("byte: ${x} ") //AAAAAAAAAAAAAAAAA
+        //println("log2: ${base}") //AAAAAAAAAAAAAAAAA
         val leftPart = "1".repeat(base) + "0"
 
-        val rightPart = (byte).toString(2).removeRange(0,1)
+        val rightPart = (x).toString(2).removeRange(0,1)
 //        val rightPart2 = (byte - 2.0.pow(base).toInt()).toString(2)
         return mutableListOf<Boolean>().apply {
             (leftPart + rightPart).forEach {
@@ -194,36 +224,39 @@ data class Solve(val mode: String, val input: File, val output: File) {
 
 
         val resList = mutableListOf<Byte>()
+        val resList2 = mutableListOf<Int>()
 //        bwt.byteArray.plus(transformIndexToByte(bwt.index)).forEach { byte ->
         println("____________")
         bwt.byteArray.forEach { byte ->
             index = alphabet.indexOfFirst { value ->
                 value == byte
             }
-            print("$index  '${byte.toChar()}' '${if (byte.toInt() < 0) byte.toInt() + 256 else byte.toInt()}' | ")
+            //print("$index  '${byte.toChar()}' '${if (byte.toInt() < 0) byte.toInt() + 256 else byte.toInt()}' | ") //AAAAAAAAAAAAAAAAA
             resList.add((index + 1).toByte())
+            resList2.add((index + 1))
             alphabet.removeAt(index)
             alphabet.add(0, byte)
         }
         println("____________")
 
-        return MTF(resList.toByteArray())
+        return MTF(resList2)
+//        return MTF(resList.toByteArray())
     }
 
     private fun transformIndexToByte(index: Int): ByteArray {
         return ByteBuffer.allocate(4).putInt(index).array()
     }
 
-    private fun decodeMtf(mtf: MTF): ByteArray {
+    private fun decodeMtf(mtf: ByteArray): ByteArray {
         val alphabet = generateSequence(0.toByte()) { if (it.toInt() < 256) (it.toInt() + 1).toByte() else null }.take(256).toMutableList()
 
         val resList = mutableListOf<Byte>()
         var index: Int
         var alpValue: Byte
-        mtf.byteArray.forEach { byte ->
-            index = byte.toInt() - 1
-            if (byte == 0.toByte()) {
-                index = 255
+        mtf.forEach { byte ->
+            index = byte.toInt()
+            if (index < 0) {
+                index += 256
             }
             alpValue = alphabet[index]
             resList.add(alpValue)
@@ -293,7 +326,8 @@ data class Solve(val mode: String, val input: File, val output: File) {
 
 data class BWT(val byteArray: ByteArray, val index: Int)
 
-data class MTF(val byteArray: ByteArray)
+data class MTF(val byteArray: List<Int>)
+//data class MTF(val byteArray: ByteArray)
 
 
 class BiteList {
@@ -312,7 +346,8 @@ class BiteList {
     }
 
     fun toRealByteArray(): ByteArray {
-        val byteList = mutableListOf<Byte>()
+//        val byteList = mutableListOf<Byte>()
+        val byteList2 = mutableListOf<Int>()
         var index = 0
         while (index < bites.size) {
             if (bites[index]) {
@@ -324,10 +359,11 @@ class BiteList {
                     index++
                 }
                 index++
-                if (amountOne == 8) {
-                    byteList.add(0.toByte())
-                    continue
-                }
+//                if (amountOne == 8) {
+//                    byteList.add(0.toByte())
+//                    byteList2.add(255)
+//                    continue
+//                }
                 if (index >= bites.size) {
                     break
                 }
@@ -339,12 +375,15 @@ class BiteList {
                 val left = 2.0.pow(amountOne.toDouble()).toInt()
                 val right = BigInteger(stringBuilderRight.toString(), 2).toInt()
                 val res = (left + right).toByte()
-                byteList.add(res)
+//                byteList.add(res)
+                byteList2.add(res - 1)
             } else {
-                byteList.add(BigInteger("1").toByte())
+//                byteList.add(BigInteger("1").toByte())
+                byteList2.add(0)
                 index++
             }
         }
-        return byteList.toByteArray()
+        return byteList2.map { it.toByte() }.toByteArray()
+//        return byteList.toByteArray()
     }
 }
