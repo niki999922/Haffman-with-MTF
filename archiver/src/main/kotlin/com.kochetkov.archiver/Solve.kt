@@ -93,9 +93,13 @@ data class Solve(val mode: String, val input: File, val output: File) {
         textByte = newBytes.toByteArray()
         println("start mtf")
         val mtf = mtf(BWT(textByte, 0))
+        println("mtf indexed res:")
+        println(mtf.byteArray)
         println("start monocode")
         monotoneCode(mtf)
     }
+
+
 
     private fun monotoneCode(mtf: MTF) {
         val biteList = BiteList()
