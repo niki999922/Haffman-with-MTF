@@ -153,8 +153,17 @@ data class Solve(val mode: String, val input: File, val output: File) {
 //        biteList.toByteArray()
     }
 
-    private fun monotone(byte: Byte): List<Boolean> {
-        val base = log2(byte.toFloat()).toInt() //1111110 000011
+    fun monotone(byte: Byte): List<Boolean> {
+        val x = byte.toInt()
+        val base = if (byte.toInt() == 0) {
+            8 //111111110
+            return mutableListOf(true, true, true, true, true, true, true, true, false)
+        } else {
+//            byte.myLog()
+            log2(byte.toFloat()).toInt() //1111110 000011
+        }
+        print("byte: ${byte.toFloat()} ")
+        println("log2: ${base}")
         val leftPart = "1".repeat(base) + "0"
 
         val rightPart = (byte).toString(2).removeRange(0,1)
@@ -166,6 +175,18 @@ data class Solve(val mode: String, val input: File, val output: File) {
         }
     }
 
+    fun Byte.myLog(): Int {
+        if (this.toInt() < 2) return 0
+        if (this.toInt() < 4) return 1
+        if (this.toInt() < 8) return 2
+        if (this.toInt() < 16) return 3
+        if (this.toInt() < 32) return 4
+        if (this.toInt() < 64) return 5
+        if (this.toInt() < 128) return 6
+        if (this.toInt() < 256) return 7
+        return 7
+    }
+
     private fun mtf(bwt: BWT): MTF {
         var index: Int
 
@@ -174,14 +195,17 @@ data class Solve(val mode: String, val input: File, val output: File) {
 
         val resList = mutableListOf<Byte>()
 //        bwt.byteArray.plus(transformIndexToByte(bwt.index)).forEach { byte ->
+        println("____________")
         bwt.byteArray.forEach { byte ->
             index = alphabet.indexOfFirst { value ->
                 value == byte
             }
+            print("$index  '${byte.toChar()}' '${if (byte.toInt() < 0) byte.toInt() + 256 else byte.toInt()}' | ")
             resList.add((index + 1).toByte())
             alphabet.removeAt(index)
             alphabet.add(0, byte)
         }
+        println("____________")
 
         return MTF(resList.toByteArray())
     }
@@ -198,6 +222,9 @@ data class Solve(val mode: String, val input: File, val output: File) {
         var alpValue: Byte
         mtf.byteArray.forEach { byte ->
             index = byte.toInt() - 1
+            if (byte == 0.toByte()) {
+                index = 255
+            }
             alpValue = alphabet[index]
             resList.add(alpValue)
             alphabet.removeAt(index)
@@ -297,6 +324,10 @@ class BiteList {
                     index++
                 }
                 index++
+                if (amountOne == 8) {
+                    byteList.add(0.toByte())
+                    continue
+                }
                 if (index >= bites.size) {
                     break
                 }
