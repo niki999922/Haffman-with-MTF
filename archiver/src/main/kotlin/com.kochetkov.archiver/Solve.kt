@@ -10,11 +10,10 @@ import kotlin.math.pow
 
 class Solve(val mode: String, val input: File, val output: File) {
     private val BLOCK_SIZE = 250
-//    val tempFile = File("ttttt.txt")
+
     fun solve() {
         println("input file: ${input.absolutePath}")
         println("output file: ${output.absolutePath}")
-//        println("Used solve2 mode: \'encode\'")
         if (mode == "encode") {
             encode()
         } else {
@@ -24,7 +23,6 @@ class Solve(val mode: String, val input: File, val output: File) {
 
     private fun decode() {
         println("start read indexes")
-        //TODO: DONT FORGET!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         var textByte = Files.readAllBytes(input.toPath())
         val indexAmount = ByteBuffer.wrap(textByte.toMutableList().subList(0, 4).toByteArray()).int
         val indList = mutableListOf<Int>()
@@ -41,28 +39,18 @@ class Solve(val mode: String, val input: File, val output: File) {
 
         println("start convertByteArrayToBiteList")
         val biteList = convertByteArrayToBiteList(textByte)
-//        printBooleanArray(biteList, "AFTER READ DECODE")
         println("start fromMonocode")
         var intListRes = fromMonocode(biteList)
         println("start decode mtf")
-//        println("BEFORE DECODE MTF: $intListRes")
         intListRes = fromMtf(intListRes)
-//        println("AFTER DECODE MTF: $intListRes")
         println("start decode bwt")
 
         val resList = mutableListOf<Byte>()
         intListRes.map { it.toByte() }.toByteArray().toList().chunked(BLOCK_SIZE).forEachIndexed { ind, chunk ->
-//            println("chunk: $ind of ${intListRes.size}")
-//            if (ind % 1000 == 0) {
-//                println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-//                println("chunk: $ind of ${intListRes.size}")
-//            }
             resList.addAll(fromBwt(chunk.toByteArray(), indList[ind]).toList())
         }
 
-
         val res = resList.toByteArray()
-        //TODO: DONT FORGET!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
         output.writeBytes(res)
         println("Complete decode!")
     }
@@ -106,7 +94,6 @@ class Solve(val mode: String, val input: File, val output: File) {
     }
 
     private fun convertByteArrayToBiteList(byteArray: ByteArray): List<Boolean> {
-        //TODO: не верю! (полина)
         val biteList = mutableListOf<Boolean>()
         val bytTmp = mutableListOf<Boolean>()
         val bitSet = BitSet.valueOf(byteArray)
@@ -160,7 +147,6 @@ class Solve(val mode: String, val input: File, val output: File) {
                 }
                 listInt.add(intX + intY)
             }
-//            counter++
         }
 
         return listInt
@@ -171,7 +157,6 @@ class Solve(val mode: String, val input: File, val output: File) {
         val newInts = mutableListOf<Int>()
 
         val textByte = Files.readAllBytes(input.toPath())
-//        println(textByte.toList())
         println("start bwt")
         textByte.toList().chunked(BLOCK_SIZE).forEach { chunk ->
             val res = convertByBwt(chunk.toByteArray())
@@ -186,14 +171,12 @@ class Solve(val mode: String, val input: File, val output: File) {
         }
 
         println("start mtf")
-//        println("BEFORE MTF: $newInts")
         val listMtfIndexes = convertByMtf(newInts)
-//        println("AFTER MTF: $listMtfIndexes")
         println("start monocode")
         val bitList = convertToMonotoneCode(listMtfIndexes)
-//        printBooleanArray(bitList, "AFTER MONOCODE")
         println("start writing")
         writeBitList(bitList.toMutableList())
+        println("Complete encode!")
     }
 
     private fun writeBitList(bitList: MutableList<Boolean>) {
@@ -273,11 +256,5 @@ class Solve(val mode: String, val input: File, val output: File) {
         }
 
         return result
-    }
-
-
-    private fun printBooleanArray(booleanArray: List<Boolean>, name: String) {
-        println("PRINT BOOLEAN ARRAY : $name")
-        println(booleanArray.joinToString("") { if (it) "1" else "0" })
     }
 }
