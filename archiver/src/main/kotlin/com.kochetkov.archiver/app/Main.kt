@@ -15,7 +15,6 @@ class Main {
             val mode = args[0]
             val inputFile = File(args[1])
             val outputFile = File(args[2])
-//            val outputFile3 = File(args[3])
 
             if (mode != "encode" && mode != "decode") {
                 System.err.println("Invalid mode used: <decode|encode> <input> <output>")
@@ -26,9 +25,6 @@ class Main {
                 System.err.println("Input file doesn't exist")
                 return
             }
-
-//            Solve(mode,inputFile,outputFile).solve()
-//            Solve2(inputFile, outputFile3).solve()
 
             Solve(mode, inputFile, outputFile).solve()
         }
