@@ -9,7 +9,7 @@ import kotlin.math.log2
 import kotlin.math.pow
 
 class Solve(val mode: String, val input: File, val output: File) {
-    private val BLOCK_SIZE = 250
+    private val BLOCK_SIZE = 65530
 
     fun solve() {
         println("input file: ${input.absolutePath}")
@@ -21,20 +21,39 @@ class Solve(val mode: String, val input: File, val output: File) {
         }
     }
 
+    class MyComparator(val input: ByteArray) : Comparator<Int> {
+        override fun compare(a: Int, b: Int): Int {
+            for (i in input.indices) {
+                val result = compareBytes(element(input, a, i), element(input, b, i))
+                if (result != 0) return result
+            }
+            return 0
+        }
+
+        private fun element(input: ByteArray, shift: Int, index: Int): Byte {
+            val i = shift + index
+            return if (i >= input.size) input[i - input.size] else input[i]
+        }
+
+        private fun compareBytes(x: Byte, y: Byte): Int = if (x < y) -1 else if (x == y) 0 else 1
+    }
+
     private fun decode() {
         println("start read indexes")
         var textByte = Files.readAllBytes(input.toPath())
         val indexAmount = ByteBuffer.wrap(textByte.toMutableList().subList(0, 4).toByteArray()).int
+        var indexRead = ByteBuffer.wrap(textByte.toMutableList().subList(4, 8).toByteArray()).int
+        textByte = textByte.drop(8).toByteArray()
         val indList = mutableListOf<Int>()
         println("start bwt indexes")
-        for (ind in 0 until indexAmount) {
-            var indexRead = ByteBuffer.wrap(textByte.toMutableList().subList(ind + 4, ind + 5).toByteArray()).get().toInt()
-            if (indexRead < 0) {
-                indexRead += 256
-            }
-            indList.add(indexRead)
+//        for (ind in 0 until indexAmount) {
+//            var indexRead = ByteBuffer.wrap(textByte.toMutableList().subList(ind * 4, ind * 4 + 4).toByteArray()).int
+        if (indexRead < 0) {
+            indexRead += 65536
         }
-        textByte = textByte.drop(indexAmount + 4).toByteArray()
+        indList.add(indexRead)
+//        }
+        textByte = textByte
 
 
         println("start convertByteArrayToBiteList")
@@ -45,14 +64,24 @@ class Solve(val mode: String, val input: File, val output: File) {
         intListRes = fromMtf(intListRes)
         println("start decode bwt")
 
-        val resList = mutableListOf<Byte>()
-        intListRes.map { it.toByte() }.toByteArray().toList().chunked(BLOCK_SIZE).forEachIndexed { ind, chunk ->
-            resList.addAll(fromBwt(chunk.toByteArray(), indList[ind]).toList())
-        }
+//        val resList = mutableListOf<Byte>()
 
-        val res = resList.toByteArray()
+        val resList2 = ByteArray(intListRes.map { it.toByte() }.toByteArray().size)
+        decodeBWT(intListRes.map { it.toByte() }.toByteArray(), indexRead, resList2)
+//        intListRes.map { it.toByte() }.toByteArray().toList().chunked(BLOCK_SIZE).forEachIndexed { ind, chunk ->
+//            resList.addAll(fromBwt(chunk.toByteArray(), indList[ind]).toList())
+//        }
+
+//        val res = resList.toByteArray()
+        val res = resList2
         output.writeBytes(res)
         println("Complete decode!")
+    }
+
+
+    private fun element(input: ByteArray, shift: Int, index: Int): Byte {
+        val i = shift + index
+        return if (i >= input.size) input[i - input.size] else input[i]
     }
 
     private fun fromBwt(byteArray: ByteArray, index: Int): ByteArray {
@@ -91,6 +120,18 @@ class Solve(val mode: String, val input: File, val output: File) {
         }
 
         return resList
+    }
+
+    fun encodeBWT(input: ByteArray, output: ByteArray): Int {
+        val shifts = Array(input.size) { it }
+        shifts.sortWith(MyComparator(input))
+
+
+        for (i in shifts.indices) {
+            output[i] = element(input, shifts[i], input.size - 1)
+        }
+
+        return shifts.indexOfFirst { it == 0 }
     }
 
     private fun convertByteArrayToBiteList(byteArray: ByteArray): List<Boolean> {
@@ -152,23 +193,55 @@ class Solve(val mode: String, val input: File, val output: File) {
         return listInt
     }
 
+    fun decodeBWT(input: ByteArray, num: Int, output: ByteArray) {
+        val lessSimilar = IntArray(input.size)
+        val elementAmount = IntArray(256)
+        val lessAmount = IntArray(256)
+        var minElement = 255
+        var maxElement = 0
+        for (i in input.indices) {
+            val value = input[i].fixInt()
+            minElement = Integer.min(minElement, value)
+            maxElement = Integer.max(maxElement, value)
+            lessSimilar[i] = elementAmount[value]++
+        }
+        var lessSum = 0
+        for (i in minElement..maxElement) {
+            lessAmount[i] = lessSum
+            lessSum += elementAmount[i]
+        }
+        output[output.lastIndex] = input[num]
+        var lastNum = num
+        for (i in 0 until input.size - 1) {
+            val prev = output.lastIndex - i
+            lastNum = lessAmount[output[prev].fixInt()] + lessSimilar[lastNum]
+            output[prev - 1] = input[lastNum]
+        }
+    }
+
+
     private fun encode() {
         val indexes = mutableListOf<Int>()
         val newInts = mutableListOf<Int>()
 
         val textByte = Files.readAllBytes(input.toPath())
+        val newByteArr = ByteArray(textByte.size)
         println("start bwt")
-        textByte.toList().chunked(BLOCK_SIZE).forEach { chunk ->
-            val res = convertByBwt(chunk.toByteArray())
-            newInts.addAll(res.first.toList().map { it.toInt() })
-            indexes.add(res.second)
-        }
+        val index = encodeBWT(textByte, newByteArr)
+        newInts.addAll(newByteArr.toList().map { it.toInt() })
+//        textByte = newByteArr
+//        textByte.toList().chunked(BLOCK_SIZE).forEach { chunk ->
+//            val res = convertByBwt(chunk.toByteArray())
+//            newInts.addAll(res.first.toList().map { it.toInt() })
+//            indexes.add(res.second)
+//        }
 
         println("start write indexes")
         output.writeBytes(ByteBuffer.allocate(4).putInt(indexes.size).array())
-        indexes.forEach {
-            output.appendBytes(listOf(it.toByte()).toByteArray())
-        }
+        output.appendBytes(ByteBuffer.allocate(4).putInt(index).array())
+//        indexes.forEach {
+//            output.appendBytes(ByteBuffer.allocate(4).putInt(it).array())
+//        }
 
         println("start mtf")
         val listMtfIndexes = convertByMtf(newInts)
@@ -257,4 +330,6 @@ class Solve(val mode: String, val input: File, val output: File) {
 
         return result
     }
+
+    private fun Byte.fixInt(): Int = 128 + this.toInt()
 }

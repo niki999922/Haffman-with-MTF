@@ -20,7 +20,8 @@ class Main {
                 return
             }
 
-            Solve("encode", inputFile, outputFile).solve()
+            Solve(args[2], inputFile, outputFile).solve()
+//            Solve("encode", inputFile, outputFile).solve()
 //            Solve("decode", inputFile, outputFile).solve()
         }
     }
