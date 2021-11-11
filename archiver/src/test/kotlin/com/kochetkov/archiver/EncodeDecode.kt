@@ -155,7 +155,7 @@ class EncodeDecode {
 
     private fun testFile(file: File) {
         val tempDirectory = Paths.get("tempTestDirectory_1").apply { toFile().mkdirs() }
-        val tempFile = Files.createTempFile(Paths.get("."),"____${file.name}_encode_",".txt")
+        val tempFile = Files.createTempFile(Paths.get("."),"__${file.name}_encode_",".txt")
         val tempFile2 = Files.createTempFile(Paths.get("."),"__${file.name}_decode_",".txt")
         try {
             Main.main(listOf("encode", file.absolutePath.toString(), tempFile.toAbsolutePath().toString()).toTypedArray())
