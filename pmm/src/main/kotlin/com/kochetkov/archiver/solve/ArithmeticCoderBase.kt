@@ -15,9 +15,9 @@ abstract class ArithmeticCoderBase(numBits: Int) {
         require(!(numBits < 1 || numBits > 62)) { "State size out of range" }
         numStateBits = numBits
         fullRange = 1L shl numStateBits
-        halfRange = fullRange ushr 1 // Non-zero
-        quarterRange = halfRange ushr 1 // Can be zero
-        minimumRange = quarterRange + 2 // At least 2
+        halfRange = fullRange ushr 1
+        quarterRange = halfRange ushr 1
+        minimumRange = quarterRange + 2
         maximumTotal = Math.min(Long.MAX_VALUE / fullRange, minimumRange)
         stateMask = fullRange - 1
         low = 0
@@ -28,12 +28,10 @@ abstract class ArithmeticCoderBase(numBits: Int) {
     protected abstract fun underflow()
 
     protected fun update(freqs: CheckedFrequencyTable, symbol: Int) {
-        // State check
         if (low >= high || low and stateMask != low || high and stateMask != high) throw AssertionError("Low or high out of range")
         val range = high - low + 1
         if (range < minimumRange || range > fullRange) throw AssertionError("Range out of range")
 
-        // Frequency table values check
         val total = freqs.total.toLong()
         val symLow = freqs.getLow(symbol).toLong()
         val symHigh = freqs.getHigh(symbol).toLong()
