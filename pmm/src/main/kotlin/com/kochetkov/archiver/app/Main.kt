@@ -1,6 +1,5 @@
 package com.kochetkov.archiver.app
 
-import com.kochetkov.archiver.solve.Solve
 import java.io.File
 
 class Main {
@@ -20,7 +19,7 @@ class Main {
                 return
             }
 
-            Solve(args[2], inputFile, outputFile).solve()
+//            Solve(args[2], inputFile, outputFile).solve()
 //            Solve("encode", inputFile, outputFile).solve()
 //            Solve("decode", inputFile, outputFile).solve()
         }
