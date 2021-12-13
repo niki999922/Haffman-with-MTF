@@ -12,6 +12,18 @@ internal class PpmModel(order: Int, symbolLimit: Int, escapeSymbol: Int) {
     @JvmField
 	val orderMinus1Freqs: FrequencyTable
 
+    init {
+        require(!(order < -1 || symbolLimit <= 0 || escapeSymbol < 0 || escapeSymbol >= symbolLimit))
+        modelOrder = order
+        this.symbolLimit = symbolLimit
+        this.escapeSymbol = escapeSymbol
+        if (order >= 0) {
+            rootContext = Context(symbolLimit, order >= 1)
+            rootContext!!.frequencies.increment(escapeSymbol)
+        } else rootContext = null
+        orderMinus1Freqs = FlatFrequencyTable(symbolLimit)
+    }
+
     fun incrementContexts(history: IntArray, symbol: Int) {
         if (modelOrder == -1) return
         require(!(history.size > modelOrder || symbol < 0 || symbol >= symbolLimit))
@@ -40,17 +52,5 @@ internal class PpmModel(order: Int, symbolLimit: Int, escapeSymbol: Int) {
             frequencies = SimpleFrequencyTable(IntArray(symbols))
             subcontexts = if (hasSubctx) arrayOfNulls(symbols) else null
         }
-    }
-
-    init {
-        require(!(order < -1 || symbolLimit <= 0 || escapeSymbol < 0 || escapeSymbol >= symbolLimit))
-        modelOrder = order
-        this.symbolLimit = symbolLimit
-        this.escapeSymbol = escapeSymbol
-        if (order >= 0) {
-            rootContext = Context(symbolLimit, order >= 1)
-            rootContext!!.frequencies.increment(escapeSymbol)
-        } else rootContext = null
-        orderMinus1Freqs = FlatFrequencyTable(symbolLimit)
     }
 }

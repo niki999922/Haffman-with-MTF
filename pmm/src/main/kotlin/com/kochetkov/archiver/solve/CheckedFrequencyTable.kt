@@ -3,22 +3,13 @@ package com.kochetkov.archiver.solve
 import java.lang.AssertionError
 import java.util.Objects
 
-/*
- * Reference arithmetic coding
- * Copyright (c) Project Nayuki
- * 
- * https://www.nayuki.io/page/reference-arithmetic-coding
- * https://github.com/nayuki/Reference-arithmetic-coding
- */ /**
- * A wrapper that checks the preconditions (arguments) and postconditions (return value)
- * of all the frequency table methods. Useful for finding faults in a frequency table
- * implementation. However, arithmetic overflow conditions are not checked.
- */
 class CheckedFrequencyTable(freq: FrequencyTable) : FrequencyTable {
-    /*---- Fields ----*/ // The underlying frequency table that holds the data (not null).
     private val freqTable: FrequencyTable
 
-    /*---- Methods ----*/
+    init {
+        freqTable = Objects.requireNonNull(freq)
+    }
+
     override val symbolLimit: Int
         get() {
             val result = freqTable.symbolLimit
@@ -80,10 +71,5 @@ class CheckedFrequencyTable(freq: FrequencyTable) : FrequencyTable {
 
     private fun isSymbolInRange(symbol: Int): Boolean {
         return 0 <= symbol && symbol < symbolLimit
-    }
-
-    /*---- Constructor ----*/
-    init {
-        freqTable = Objects.requireNonNull(freq)
     }
 }
