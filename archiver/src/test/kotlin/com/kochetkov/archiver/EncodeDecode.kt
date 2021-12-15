@@ -11,6 +11,7 @@ import java.util.*
 
 class EncodeDecode {
     @Test
+//    @Ignore
     fun `have to encode decode correct testtxt`() {
         testFile(File("/Users/nikita.kochetkov/Haffman-with-MTF/calgarycorpus/test.txt"))
     }
@@ -28,7 +29,7 @@ class EncodeDecode {
     }
 
     @Test
-    @Ignore
+//    @Ignore
     fun `have to encode decode correct bib`() {
         listOf("bib", "book1", "book2", "news", "paper1", "paper2", "progc", "progl", "progp", "test.txt", "test2.txt", "trans").parallelStream().forEach {
             testFile(File("/Users/nikita.kochetkov/Haffman-with-MTF/calgarycorpus/$it"))
@@ -36,51 +37,71 @@ class EncodeDecode {
     }
 
     @Test
+//    @Ignore
+    fun `have to encode decode correct JPG`() {
+        listOf("airplane30.jpg","archiver.jar","arctichare30.jpg","baboon30.jpg","cat30.jpg","fruits30.jpg","frymire30.jpg","girl30.jpg","lena30.jpg","monarch30.jpg","peppers30.jpg","pool30.jpg","sails30.jpg","serrano30.jpg","tulips30.jpg","watch30.jpg").parallelStream().forEach {
+            testFile(File("/Users/nikita.kochetkov/Haffman-with-MTF/lab2/jpeg30/$it"))
+        }
+
+//        testFile(File("/Users/nikita.kochetkov/Haffman-with-MTF/lab2/jpeg30/airplane30.jpg"))
+    }
+
+    @Test
+//    @Ignore
     fun `have to encode decode correct 10`() {
         testFile(File("/Users/nikita.kochetkov/Haffman-with-MTF/calgarycorpus/trans"))
     }
 
     @Test
+    @Ignore
     fun `have to encode decode correct 9`() {
         testFile(File("/Users/nikita.kochetkov/Haffman-with-MTF/calgarycorpus/progp"))
     }
 
     @Test
+    @Ignore
     fun `have to encode decode correct 8`() {
         testFile(File("/Users/nikita.kochetkov/Haffman-with-MTF/calgarycorpus/progl"))
     }
 
     @Test
+    @Ignore
     fun `have to encode decode correct 7`() {
         testFile(File("/Users/nikita.kochetkov/Haffman-with-MTF/calgarycorpus/bib"))
     }
 
     @Test
+    @Ignore
     fun `have to encode decode correct 6`() {
         testFile(File("/Users/nikita.kochetkov/Haffman-with-MTF/calgarycorpus/book1"))
     }
 
     @Test
+//    @Ignore
     fun `have to encode decode correct 5`() {
         testFile(File("/Users/nikita.kochetkov/Haffman-with-MTF/calgarycorpus/book2"))
     }
 
     @Test
+    @Ignore
     fun `have to encode decode correct 4`() {
         testFile(File("/Users/nikita.kochetkov/Haffman-with-MTF/calgarycorpus/news"))
     }
 
     @Test
+    @Ignore
     fun `have to encode decode correct 3`() {
         testFile(File("/Users/nikita.kochetkov/Haffman-with-MTF/calgarycorpus/paper1"))
     }
 
     @Test
+    @Ignore
     fun `have to encode decode correct 2`() {
         testFile(File("/Users/nikita.kochetkov/Haffman-with-MTF/calgarycorpus/paper2"))
     }
 
     @Test
+    @Ignore
     fun `have to encode decode correct 1`() {
         testFile(File("/Users/nikita.kochetkov/Haffman-with-MTF/calgarycorpus/progc"))
     }
@@ -94,21 +115,25 @@ class EncodeDecode {
     }
 
     @Test
+    @Ignore
     fun `have to encode decode correct not friend 1`() {
         testFile(File("/Users/nikita.kochetkov/Haffman-with-MTF/calgarycorpus/obj1"))
     }
 
     @Test
+    @Ignore
     fun `have to encode decode correct not friend 2`() {
         testFile(File("/Users/nikita.kochetkov/Haffman-with-MTF/calgarycorpus/obj2"))
     }
 
     @Test
+    @Ignore
     fun `have to encode decode correct not friend 3 aaaaaaaaaaaaaaaaa`() {
         testFile(File("/Users/nikita.kochetkov/Haffman-with-MTF/calgarycorpus/pic"))
     }
 
     @Test
+    @Ignore
     fun `have to encode decode correct not friend 4`() {
         testFile(File("/Users/nikita.kochetkov/Haffman-with-MTF/calgarycorpus/geo"))
     }
