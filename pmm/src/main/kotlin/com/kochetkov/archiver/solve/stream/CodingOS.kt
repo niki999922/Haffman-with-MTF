@@ -1,24 +1,22 @@
 package com.kochetkov.archiver.solve.stream
 
+import com.kochetkov.archiver.solve.addTo8th
+import com.kochetkov.archiver.solve.flushBuff
 import java.io.Closeable
 import java.io.OutputStream
 
-class CodingOS(private val output: OutputStream) : Closeable {
-    private var currentByte = 0
-    private var numBitsFilled = 0
+class CodingOS(val output: OutputStream) : Closeable {
+    var byte = 0
+    var bitsWritten = 0
 
-    fun write(b: Int) {
-        currentByte = currentByte shl 1 or b
-        numBitsFilled++
-        if (numBitsFilled == 8) {
-            output.write(currentByte)
-            currentByte = 0
-            numBitsFilled = 0
-        }
+    fun write(value: Int) {
+        byte = byte shl 1 or value
+        bitsWritten++
+        flushBuff()
     }
 
     override fun close() {
-        while (numBitsFilled != 0) write(0)
+        addTo8th()
         output.close()
     }
 }

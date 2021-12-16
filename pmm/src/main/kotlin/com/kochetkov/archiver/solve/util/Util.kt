@@ -34,3 +34,14 @@ fun decompress(input: CodingIS, out: OutputStream) {
     }
 }
 
+fun CodingOS.addTo8th() {
+    while (bitsWritten != 0) write(0)
+}
+
+fun CodingOS.flushBuff() {
+    if (bitsWritten == 8) {
+        output.write(byte)
+        byte = 0
+        bitsWritten = 0
+    }
+}
