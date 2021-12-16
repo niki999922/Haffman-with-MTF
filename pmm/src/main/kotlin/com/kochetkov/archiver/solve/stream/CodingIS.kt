@@ -1,9 +1,9 @@
-package com.kochetkov.archiver.solve
+package com.kochetkov.archiver.solve.stream
 
 import java.io.Closeable
 import java.io.InputStream
 
-class BitInputStream(private val input: InputStream) : Closeable {
+class CodingIS(private val input: InputStream) : Closeable {
     private var currentByte = 0
     private var numBitsRemaining = 0
 

@@ -1,4 +1,6 @@
-package com.kochetkov.archiver.solve
+package com.kochetkov.archiver.solve.coder
+
+import com.kochetkov.archiver.solve.CheckedFrequencyTable
 
 abstract class ArithmeticCoderBase(numBits: Int) {
     protected val numStateBits: Int

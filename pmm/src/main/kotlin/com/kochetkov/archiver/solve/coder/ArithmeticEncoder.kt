@@ -1,7 +1,11 @@
-package com.kochetkov.archiver.solve
+package com.kochetkov.archiver.solve.coder
+
+import com.kochetkov.archiver.solve.CheckedFrequencyTable
+import com.kochetkov.archiver.solve.FrequencyTable
+import com.kochetkov.archiver.solve.stream.CodingOS
 
 
-class ArithmeticEncoder(numBits: Int, val output: BitOutputStream) : ArithmeticCoderBase(numBits) {
+class ArithmeticEncoder(numBits: Int, val output: CodingOS) : ArithmeticCoderBase(numBits) {
     private var numUnderflow: Int = 0
 
     fun write(frequency: FrequencyTable, symbol: Int) {

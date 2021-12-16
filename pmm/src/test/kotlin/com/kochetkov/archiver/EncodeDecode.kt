@@ -1,12 +1,13 @@
 package com.kochetkov.archiver
 
 import com.kochetkov.archiver.solve.*
+import com.kochetkov.archiver.solve.stream.CodingIS
+import com.kochetkov.archiver.solve.stream.CodingOS
 import org.junit.Assert
 import org.junit.Ignore
 import org.junit.Test
 import java.io.*
 import java.math.BigDecimal
-import java.math.BigInteger
 
 class EncodeDecode {
 
@@ -122,7 +123,7 @@ class EncodeDecode {
 
 
             BufferedInputStream(FileInputStream(file)).use { input ->
-                BitOutputStream(BufferedOutputStream(FileOutputStream(tempFile.toFile()))).use { out ->
+                CodingOS(BufferedOutputStream(FileOutputStream(tempFile.toFile()))).use { out ->
                     compress(input, out)
                 }
             }
@@ -135,7 +136,7 @@ class EncodeDecode {
         println("Start decompress for $name")
         val startDec = System.currentTimeMillis()
 
-            BitInputStream(BufferedInputStream(FileInputStream(tempFile.toFile()))).use { input ->
+            CodingIS(BufferedInputStream(FileInputStream(tempFile.toFile()))).use { input ->
                 BufferedOutputStream(FileOutputStream(tempFile2.toFile())).use { out ->
                     decompress(input, out)
                 }

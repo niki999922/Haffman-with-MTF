@@ -2,6 +2,8 @@ package com.kochetkov.archiver.application
 
 import com.kochetkov.archiver.Solve
 import com.kochetkov.archiver.solve.*
+import com.kochetkov.archiver.solve.stream.CodingIS
+import com.kochetkov.archiver.solve.stream.CodingOS
 import java.io.*
 import java.nio.file.Files
 
@@ -9,8 +11,8 @@ class Main {
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-//            val doEncode = true
-            val doEncode = false
+            val doEncode = true
+//            val doEncode = false
 
             if (args.size < 2) {
                 System.err.println("Expected tree arguments: <input> <output>")
@@ -31,14 +33,14 @@ class Main {
                     Solve("encode", inputFile, tempFile).solve()
 
                     BufferedInputStream(FileInputStream(tempFile)).use { input ->
-                        BitOutputStream(BufferedOutputStream(FileOutputStream(outputFile))).use { out ->
+                        CodingOS(BufferedOutputStream(FileOutputStream(outputFile))).use { out ->
                             compress(input, out)
                         }
                     }
 //                    AdaptiveArithmeticCompress.main(arrayOf(tempFile.toPath().toAbsolutePath().toString(), outputFile.toPath().toAbsolutePath().toString()))
                 } else {
 //                    AdaptiveArithmeticDecompress.main(arrayOf(inputFile.toPath().toAbsolutePath().toString(), tempFile.toPath().toAbsolutePath().toString()))
-                    BitInputStream(BufferedInputStream(FileInputStream(inputFile))).use { input ->
+                    CodingIS(BufferedInputStream(FileInputStream(inputFile))).use { input ->
                         BufferedOutputStream(FileOutputStream(tempFile)).use { out ->
                             decompress(input, out)
                         }

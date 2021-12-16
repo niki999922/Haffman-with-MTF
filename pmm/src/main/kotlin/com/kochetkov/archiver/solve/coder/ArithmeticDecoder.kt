@@ -1,7 +1,11 @@
-package com.kochetkov.archiver.solve
+package com.kochetkov.archiver.solve.coder
+
+import com.kochetkov.archiver.solve.CheckedFrequencyTable
+import com.kochetkov.archiver.solve.FrequencyTable
+import com.kochetkov.archiver.solve.stream.CodingIS
 
 
-class ArithmeticDecoder(numBits: Int, private val input: BitInputStream) : ArithmeticCoderBase(numBits) {
+class ArithmeticDecoder(numBits: Int, private val input: CodingIS) : ArithmeticCoderBase(numBits) {
     private var code: Long
 
     init {
