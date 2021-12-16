@@ -1,7 +1,7 @@
 package com.kochetkov.archiver.solve.stream
 
-import com.kochetkov.archiver.solve.addTo8th
-import com.kochetkov.archiver.solve.flushBuff
+import com.kochetkov.archiver.solve.util.addTo8th
+import com.kochetkov.archiver.solve.util.flushBuff
 import java.io.Closeable
 import java.io.OutputStream
 

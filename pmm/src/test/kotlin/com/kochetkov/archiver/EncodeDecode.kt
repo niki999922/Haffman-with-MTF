@@ -3,6 +3,8 @@ package com.kochetkov.archiver
 import com.kochetkov.archiver.solve.*
 import com.kochetkov.archiver.solve.stream.CodingIS
 import com.kochetkov.archiver.solve.stream.CodingOS
+import com.kochetkov.archiver.solve.util.compress
+import com.kochetkov.archiver.solve.util.decompress
 import org.junit.Assert
 import org.junit.Ignore
 import org.junit.Test

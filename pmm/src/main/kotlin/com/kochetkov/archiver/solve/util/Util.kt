@@ -1,4 +1,4 @@
-package com.kochetkov.archiver.solve
+package com.kochetkov.archiver.solve.util
 
 import com.kochetkov.archiver.solve.coder.Decoder
 import com.kochetkov.archiver.solve.coder.Encoder

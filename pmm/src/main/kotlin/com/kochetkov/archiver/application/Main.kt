@@ -4,6 +4,8 @@ import com.kochetkov.archiver.Solve
 import com.kochetkov.archiver.solve.*
 import com.kochetkov.archiver.solve.stream.CodingIS
 import com.kochetkov.archiver.solve.stream.CodingOS
+import com.kochetkov.archiver.solve.util.compress
+import com.kochetkov.archiver.solve.util.decompress
 import java.io.*
 import java.nio.file.Files
 
