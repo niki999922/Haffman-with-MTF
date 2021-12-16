@@ -11,7 +11,7 @@ class Encoder(numBits: Int, val output: CodingOS) : Core(numBits) {
     fun write(frequency: Frequency, symbol: Int) { update(CFrequency(frequency), symbol) }
 
     override fun shift() {
-        val bit = (low ushr numStateBits - 1).toInt()
+        val bit = (low ushr stateBits - 1).toInt()
         output.write(bit)
 
         while (numUnderflow > 0) {
@@ -20,7 +20,7 @@ class Encoder(numBits: Int, val output: CodingOS) : Core(numBits) {
         }
     }
 
-    override fun underflow() {
+    override fun under() {
         numUnderflow++
     }
 }

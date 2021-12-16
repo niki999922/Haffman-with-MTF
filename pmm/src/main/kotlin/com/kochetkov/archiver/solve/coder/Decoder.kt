@@ -8,7 +8,7 @@ import com.kochetkov.archiver.solve.stream.CodingIS
 class Decoder(numBits: Int, val input: CodingIS) : Core(numBits) {
     var code: Long = 0
 
-    init { for (i in 0 until numStateBits) code = code shl 1 or readCodeBit().toLong() }
+    init { for (i in 0 until stateBits) code = code shl 1 or readCodeBit().toLong() }
 
     fun read(frequency: Frequency): Int {
         val frequencyS = CFrequency(frequency)
@@ -29,11 +29,11 @@ class Decoder(numBits: Int, val input: CodingIS) : Core(numBits) {
     }
 
     override fun shift() {
-        code = code shl 1 and stateMask or readCodeBit().toLong()
+        code = code shl 1 and mask or readCodeBit().toLong()
     }
 
-    override fun underflow() {
-        code = code and halfRange or (code shl 1 and (stateMask ushr 1)) or readCodeBit().toLong()
+    override fun under() {
+        code = code and hRange or (code shl 1 and (mask ushr 1)) or readCodeBit().toLong()
     }
 
     private fun readCodeBit(): Int {
