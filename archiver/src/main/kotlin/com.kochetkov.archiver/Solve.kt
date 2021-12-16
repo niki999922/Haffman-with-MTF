@@ -242,7 +242,6 @@ class Solve(val mode: String, val input: File, val output: File) {
         val newInts = mutableListOf<Int>()
 
         var textByte = Files.readAllBytes(input.toPath())
-        println("FIRSTTTTTTT: ${textByte[0]}")
         textByte = textByte.drop(1).toByteArray()
         val newByteArr = ByteArray(textByte.size)
         println("start bwt")

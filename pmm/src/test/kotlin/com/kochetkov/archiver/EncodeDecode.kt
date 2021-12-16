@@ -115,26 +115,18 @@ class EncodeDecode {
 
         println("Start compress for $name")
         val startComp = System.currentTimeMillis()
-//        PpmCompress.main(arrayOf(file.toPath().toAbsolutePath().toString(), tempFile.toAbsolutePath().toString()))
         AdaptiveArithmeticCompress.main(arrayOf(file.toPath().toAbsolutePath().toString(), tempFile.toAbsolutePath().toString()))
 //        ArithmeticCompress.main(arrayOf(file.toPath().toAbsolutePath().toString(), tempFile.toAbsolutePath().toString()))
 
-//            AdaptiveArithmeticCompress.main(arrayOf(file.toPath().toAbsolutePath().toString(), tempFile_ad1.toAbsolutePath().toString()))
-//            AdaptiveArithmeticCompress.main(arrayOf(tempFile_ad1.toAbsolutePath().toString(), tempFile_ad2.toAbsolutePath().toString()))
-//            AdaptiveArithmeticCompress.main(arrayOf(tempFile_ad2.toAbsolutePath().toString(), tempFile.toAbsolutePath().toString()))
 
         val endComp = System.currentTimeMillis()
         println("Complete compress for $name: ${(endComp - startComp)} ms")
 
         println("Start decompress for $name")
         val startDec = System.currentTimeMillis()
-//        PpmDecompress.main(arrayOf(tempFile.toAbsolutePath().toString(), tempFile2.toAbsolutePath().toString()))
         AdaptiveArithmeticDecompress.main(arrayOf(tempFile.toAbsolutePath().toString(), tempFile2.toAbsolutePath().toString()))
 //        ArithmeticDecompress.main(arrayOf(tempFile.toAbsolutePath().toString(), tempFile2.toAbsolutePath().toString()))
 
-//            AdaptiveArithmeticDecompress.main(arrayOf(tempFile.toAbsolutePath().toString(), tempFile2_ad1.toAbsolutePath().toString()))
-//            AdaptiveArithmeticDecompress.main(arrayOf(tempFile2_ad1.toAbsolutePath().toString(), tempFile2_ad2.toAbsolutePath().toString()))
-//            AdaptiveArithmeticDecompress.main(arrayOf(tempFile2_ad1.toAbsolutePath().toString(), tempFile2.toAbsolutePath().toString()))
 
         val endDec = System.currentTimeMillis()
         println("Complete decompress for $name: ${(endDec - startDec)} ms")
