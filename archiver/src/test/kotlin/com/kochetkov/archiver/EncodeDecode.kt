@@ -37,7 +37,7 @@ class EncodeDecode {
     }
 
     @Test
-//    @Ignore
+    @Ignore
     fun `have to encode decode correct JPG`() {
         listOf("airplane30.jpg","arctichare30.jpg","baboon30.jpg","cat30.jpg","fruits30.jpg","frymire30.jpg","girl30.jpg","lena30.jpg","monarch30.jpg","peppers30.jpg","pool30.jpg","sails30.jpg","serrano30.jpg","tulips30.jpg","watch30.jpg").parallelStream().forEach {
             testFile(File("/Users/nikita.kochetkov/Haffman-with-MTF/lab2/jpeg30/$it"))
@@ -47,7 +47,7 @@ class EncodeDecode {
     }
 
     @Test
-//    @Ignore
+    @Ignore
     fun `have to encode decode correct JPG 80`() {
         listOf("airplane80.jpg","arctichare80.jpg","baboon80.jpg","cat80.jpg","fruits80.jpg","frymire80.jpg","girl80.jpg","lena80.jpg","monarch80.jpg","peppers80.jpg","pool80.jpg","sails80.jpg","serrano80.jpg","tulips80.jpg","watch80.jpg").parallelStream().forEach {
             testFile(File("/Users/nikita.kochetkov/Haffman-with-MTF/lab2/jpeg80/$it"))
