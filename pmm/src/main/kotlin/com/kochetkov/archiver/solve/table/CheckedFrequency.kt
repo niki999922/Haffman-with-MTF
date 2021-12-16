@@ -1,7 +1,7 @@
-package com.kochetkov.archiver.solve
+package com.kochetkov.archiver.solve.table
 
 
-class CheckedFrequencyTable(private val freqTable: FrequencyTable) : FrequencyTable {
+class CheckedFrequency(private val freqTable: Frequency) : Frequency {
     override val symbolLimit: Int
         get() {
             return freqTable.symbolLimit

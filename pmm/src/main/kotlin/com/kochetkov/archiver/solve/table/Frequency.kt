@@ -1,6 +1,6 @@
-package com.kochetkov.archiver.solve
+package com.kochetkov.archiver.solve.table
 
-interface FrequencyTable {
+interface Frequency {
     val symbolLimit: Int
     val total: Int
 

@@ -4,12 +4,13 @@ import com.kochetkov.archiver.solve.coder.Decoder
 import com.kochetkov.archiver.solve.coder.Encoder
 import com.kochetkov.archiver.solve.stream.CodingIS
 import com.kochetkov.archiver.solve.stream.CodingOS
+import com.kochetkov.archiver.solve.table.SimpleFrequency
 import java.io.InputStream
 import java.io.OutputStream
 
 
 fun compress(input: InputStream, out: CodingOS) {
-    val frequency = SimpleFrequencyTable()
+    val frequency = SimpleFrequency()
     val enc = Encoder(32, out)
     while (true) {
         val symbol = input.read()
@@ -22,7 +23,7 @@ fun compress(input: InputStream, out: CodingOS) {
 }
 
 fun decompress(input: CodingIS, out: OutputStream) {
-    val frequency = SimpleFrequencyTable()
+    val frequency = SimpleFrequency()
     val dec = Decoder(32, input)
     while (true) {
         val symbol: Int = dec.read(frequency)

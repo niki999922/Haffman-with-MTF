@@ -1,6 +1,6 @@
-package com.kochetkov.archiver.solve
+package com.kochetkov.archiver.solve.table
 
-class FlatFrequencyTable(override val total: Int) : FrequencyTable {
+class FlatFrequency(override val total: Int) : Frequency {
     override val symbolLimit: Int
         get() = total
 
