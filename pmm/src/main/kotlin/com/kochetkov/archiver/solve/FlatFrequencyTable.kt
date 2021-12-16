@@ -6,18 +6,11 @@ class FlatFrequencyTable(override val total: Int) : FrequencyTable {
     override val symbolLimit: Int
         get() = total
 
-    override fun get(symbol: Int): Int {
-        return 1
-    }
+    override fun get(symbol: Int) = 1
 
-    override fun getLow(symbol: Int): Int {
-        return symbol
-    }
+    override fun getLow(symbol: Int) = symbol
 
-    override fun getHigh(symbol: Int): Int {
-        return symbol + 1
-    }
-
+    override fun getHigh(symbol: Int) = symbol + 1
 
     override fun set(symbol: Int, freq: Int) {
         throw UnsupportedOperationException()

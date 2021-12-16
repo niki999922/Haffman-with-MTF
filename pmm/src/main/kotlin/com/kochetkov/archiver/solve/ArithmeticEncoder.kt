@@ -1,19 +1,15 @@
 package com.kochetkov.archiver.solve
 
 
-class ArithmeticEncoder(numBits: Int, private val output: BitOutputStream) : ArithmeticCoderBase(numBits) {
+class ArithmeticEncoder(numBits: Int, val output: BitOutputStream) : ArithmeticCoderBase(numBits) {
     private var numUnderflow: Int = 0
 
-    fun write(freqs: FrequencyTable?, symbol: Int) {
-        write(CheckedFrequencyTable(freqs!!), symbol)
+    fun write(freqs: FrequencyTable, symbol: Int) {
+        write(CheckedFrequencyTable(freqs), symbol)
     }
 
-    fun write(freqs: CheckedFrequencyTable?, symbol: Int) {
-        update(freqs!!, symbol)
-    }
-
-    fun finish() {
-        output.write(1)
+    fun write(freqs: CheckedFrequencyTable, symbol: Int) {
+        update(freqs, symbol)
     }
 
     override fun shift() {

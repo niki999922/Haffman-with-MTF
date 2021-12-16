@@ -14,7 +14,7 @@ class SimpleFrequencyTable : FrequencyTable {
         for (i in frequencies.indices) {
             val x = freqs[i]
             frequencies[i] = x
-            total = checkedAdd(x, total)
+            total += x
         }
         cumulative = null
     }
@@ -28,13 +28,13 @@ class SimpleFrequencyTable : FrequencyTable {
 
     override fun set(symbol: Int, freq: Int) {
         val temp = total - frequencies[symbol]
-        total = checkedAdd(temp, freq)
+        total = temp + freq
         frequencies[symbol] = freq
         cumulative = null
     }
 
     override fun increment(symbol: Int) {
-        total = checkedAdd(total, 1)
+        total += 1
         frequencies[symbol]++
         cumulative = null
     }
@@ -54,15 +54,8 @@ class SimpleFrequencyTable : FrequencyTable {
         cumulative = IntArray(frequencies.size + 1)
         var sum = 0
         for (i in frequencies.indices) {
-            sum = checkedAdd(frequencies[i], sum)
+            sum += frequencies[i]
             cumulative!![i + 1] = sum
-        }
-    }
-
-
-    companion object {
-        private fun checkedAdd(x: Int, y: Int): Int {
-            return x + y
         }
     }
 }

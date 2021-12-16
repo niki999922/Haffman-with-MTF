@@ -1,6 +1,5 @@
 package com.kochetkov.archiver.solve
 
-import java.lang.AssertionError
 
 class CheckedFrequencyTable(private val freqTable: FrequencyTable) : FrequencyTable {
     override val symbolLimit: Int
@@ -19,24 +18,9 @@ class CheckedFrequencyTable(private val freqTable: FrequencyTable) : FrequencyTa
             return freqTable.total
         }
 
-    override fun getLow(symbol: Int): Int {
-        return if (isSymbolInRange(symbol)) {
-            freqTable.getLow(symbol)
-        } else {
-            freqTable.getLow(symbol)
-            throw AssertionError("IllegalArgumentException expected")
-        }
-    }
+    override fun getLow(symbol: Int): Int = freqTable.getLow(symbol)
 
-    override fun getHigh(symbol: Int): Int {
-        return if (isSymbolInRange(symbol)) {
-            freqTable.getHigh(symbol)
-        } else {
-            freqTable.getHigh(symbol)
-            throw AssertionError("IllegalArgumentException expected")
-        }
-    }
-
+    override fun getHigh(symbol: Int): Int  = freqTable.getHigh(symbol)
 
     override fun set(symbol: Int, freq: Int) {
         freqTable[symbol] = freq
@@ -44,9 +28,5 @@ class CheckedFrequencyTable(private val freqTable: FrequencyTable) : FrequencyTa
 
     override fun increment(symbol: Int) {
         freqTable.increment(symbol)
-    }
-
-    private fun isSymbolInRange(symbol: Int): Boolean {
-        return 0 <= symbol && symbol < symbolLimit
     }
 }

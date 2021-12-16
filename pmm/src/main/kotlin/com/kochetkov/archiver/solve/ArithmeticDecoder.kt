@@ -9,8 +9,8 @@ class ArithmeticDecoder(numBits: Int, private val input: BitInputStream) : Arith
         for (i in 0 until numStateBits) code = code shl 1 or readCodeBit().toLong()
     }
 
-    fun read(freqs: FrequencyTable?): Int {
-        return read(CheckedFrequencyTable(freqs!!))
+    fun read(freqs: FrequencyTable): Int {
+        return read(CheckedFrequencyTable(freqs))
     }
 
     fun read(freqs: CheckedFrequencyTable): Int {

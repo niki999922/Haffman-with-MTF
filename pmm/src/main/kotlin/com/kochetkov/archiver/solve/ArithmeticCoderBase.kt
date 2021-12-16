@@ -5,8 +5,6 @@ abstract class ArithmeticCoderBase(numBits: Int) {
     private val fullRange: Long
     protected val halfRange: Long
     private val quarterRange: Long
-    private val minimumRange: Long
-    protected val maximumTotal: Long
     protected val stateMask: Long
     protected var low: Long
     protected var high: Long
@@ -16,8 +14,6 @@ abstract class ArithmeticCoderBase(numBits: Int) {
         fullRange = 1L shl numStateBits
         halfRange = fullRange ushr 1
         quarterRange = halfRange ushr 1
-        minimumRange = quarterRange + 2
-        maximumTotal = Math.min(Long.MAX_VALUE / fullRange, minimumRange)
         stateMask = fullRange - 1
         low = 0
         high = stateMask

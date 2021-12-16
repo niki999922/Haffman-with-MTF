@@ -9,14 +9,13 @@ fun compress(input: InputStream, out: BitOutputStream) {
     val freqs: FrequencyTable = SimpleFrequencyTable(initFreqs)
     val enc = ArithmeticEncoder(32, out)
     while (true) {
-        // Read and encode one byte
         val symbol = input.read()
         if (symbol == -1) break
         enc.write(freqs, symbol)
         freqs.increment(symbol)
     }
-    enc.write(freqs, 256) // EOF
-    enc.finish() // Flush remaining code bits
+    enc.write(freqs, 256)
+    enc.output.write(1)
 }
 
 fun decompress(input: BitInputStream, out: OutputStream) {
@@ -24,10 +23,8 @@ fun decompress(input: BitInputStream, out: OutputStream) {
     val freqs: FrequencyTable = SimpleFrequencyTable(initFreqs)
     val dec = ArithmeticDecoder(32, input)
     while (true) {
-        // Decode and write one byte
         val symbol: Int = dec.read(freqs)
-        if (symbol == 256) // EOF symbol
-            break
+        if (symbol == 256) break
         out.write(symbol)
         freqs.increment(symbol)
     }
