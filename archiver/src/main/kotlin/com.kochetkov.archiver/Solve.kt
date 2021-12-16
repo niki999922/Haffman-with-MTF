@@ -41,9 +41,10 @@ class Solve(val mode: String, val input: File, val output: File) {
     private fun decode() {
         println("start read indexes")
         var textByte = Files.readAllBytes(input.toPath())
-        val indexAmount = ByteBuffer.wrap(textByte.toMutableList().subList(0, 4).toByteArray()).int
-        var indexRead = ByteBuffer.wrap(textByte.toMutableList().subList(4, 8).toByteArray()).int
-        textByte = textByte.drop(8).toByteArray()
+//        val indexAmount = ByteBuffer.wrap(textByte.toMutableList().subList(0, 4).toByteArray()).int
+        var indexRead = ByteBuffer.wrap(textByte.toMutableList().subList(0, 4).toByteArray()).int
+//        textByte = textByte.drop(8).toByteArray()
+        textByte = textByte.drop(4).toByteArray()
         val indList = mutableListOf<Int>()
         println("start bwt indexes")
 //        for (ind in 0 until indexAmount) {
@@ -330,8 +331,8 @@ class Solve(val mode: String, val input: File, val output: File) {
 //        }
 
         println("start write indexes")
-        output.writeBytes(ByteBuffer.allocate(4).putInt(indexes.size).array())
-        output.appendBytes(ByteBuffer.allocate(4).putInt(index).array())
+//        output.writeBytes(ByteBuffer.allocate(4).putInt(indexes.size).array())
+        output.writeBytes(ByteBuffer.allocate(4).putInt(index).array())
 //        indexes.forEach {
 //            output.appendBytes(ByteBuffer.allocate(4).putInt(it).array())
 //        }
