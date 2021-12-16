@@ -1,6 +1,6 @@
 package com.kochetkov.archiver.solve.coder
 
-import com.kochetkov.archiver.solve.table.CheckedFrequency
+import com.kochetkov.archiver.solve.table.CFrequency
 
 abstract class Core(numBits: Int) {
     val numStateBits: Int
@@ -24,7 +24,7 @@ abstract class Core(numBits: Int) {
     protected abstract fun shift()
     protected abstract fun underflow()
 
-    protected fun update(freqs: CheckedFrequency, symbol: Int) {
+    protected fun update(freqs: CFrequency, symbol: Int) {
         val range = high - low + 1
 
         val total = freqs.total.toLong()

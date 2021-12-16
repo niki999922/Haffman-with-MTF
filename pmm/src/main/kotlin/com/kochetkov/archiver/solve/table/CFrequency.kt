@@ -1,7 +1,7 @@
 package com.kochetkov.archiver.solve.table
 
 
-class CheckedFrequency(val frequency: Frequency) : Frequency {
+class CFrequency(val frequency: Frequency) : Frequency {
     override fun get(symbol: Int) = frequency[symbol]
 
     override val limit: Int

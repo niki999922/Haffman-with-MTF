@@ -1,6 +1,6 @@
 package com.kochetkov.archiver.solve.coder
 
-import com.kochetkov.archiver.solve.table.CheckedFrequency
+import com.kochetkov.archiver.solve.table.CFrequency
 import com.kochetkov.archiver.solve.table.Frequency
 import com.kochetkov.archiver.solve.stream.CodingIS
 
@@ -11,7 +11,7 @@ class Decoder(numBits: Int, val input: CodingIS) : Core(numBits) {
     init { for (i in 0 until numStateBits) code = code shl 1 or readCodeBit().toLong() }
 
     fun read(frequency: Frequency): Int {
-        val frequencyS = CheckedFrequency(frequency)
+        val frequencyS = CFrequency(frequency)
         val total = frequencyS.total.toLong()
         val range = high - low + 1
         val offset = code - low

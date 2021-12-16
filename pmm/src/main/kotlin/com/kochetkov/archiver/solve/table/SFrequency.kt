@@ -1,14 +1,14 @@
 package com.kochetkov.archiver.solve.table
 
 
-class SimpleFrequency : Frequency {
+class SFrequency : Frequency {
     private var frequencies: IntArray
     private var cumulative: IntArray?
     override var total: Int = 0
 
 
     init {
-        val frequency = FlatFrequency(CONST)
+        val frequency = FFrequency(CONST)
         frequencies = IntArray(frequency.limit)
         total = 0
         for (i in frequencies.indices) {
