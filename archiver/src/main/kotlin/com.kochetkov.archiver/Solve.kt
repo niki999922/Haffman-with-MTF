@@ -10,8 +10,8 @@ import kotlin.math.pow
 
 class Solve(val mode: String, val input: File, val output: File) {
     fun solve() {
-        println("input file: ${input.absolutePath}")
-        println("output file: ${output.absolutePath}")
+//        println("input file: ${input.absolutePath}")
+//        println("output file: ${output.absolutePath}")
         if (mode == "encode") {
             encode()
         } else {
@@ -37,13 +37,13 @@ class Solve(val mode: String, val input: File, val output: File) {
     }
 
     private fun decode() {
-        println("start read indexes")
+        println("start rle and read indexes")
         var textByte = Files.readAllBytes(input.toPath())
         var indexRead = get_r3_int(textByte[0]) + get_r2_int(textByte[1]) + get_r1_int(textByte[2])
 //        var indexRead = ByteBuffer.wrap(textByte.toMutableList().subList(0, 4).toByteArray()).int
         textByte = textByte.drop(3).toByteArray()
         val indList = mutableListOf<Int>()
-        println("start bwt indexes")
+//        println("start bwt indexes")
         indList.add(indexRead)
         textByte = textByte
 
@@ -61,7 +61,7 @@ class Solve(val mode: String, val input: File, val output: File) {
         val res = resList2
         output.writeBytes(arrayOf(255.toByte()).toByteArray())
         output.appendBytes(res)
-        println("Complete decode!")
+//        println("Complete decode!")
     }
 
     fun readBytesFromRLE(byteArray: ByteArray): List<Int> {
@@ -256,7 +256,7 @@ class Solve(val mode: String, val input: File, val output: File) {
 
         println("start mtf")
         val listMtfIndexes = convertByMtf(newInts)
-        println("start monocode")
+        println("start rle")
 
         val bitList = convertToMonotoneCode2(listMtfIndexes)
         output.appendBytes(bitList.toByteArray())
@@ -340,9 +340,9 @@ class Solve(val mode: String, val input: File, val output: File) {
                 biteList.add(symbol.toByte())
                 biteList.add(get_r1_byte(count - 2))
             }
-            if (count > (1 shl 16)) {
-                println("ERRRROR")
-            }
+//            if (count > (1 shl 16)) {
+//                println("ERRRROR")
+//            }
         }
 
         return biteList

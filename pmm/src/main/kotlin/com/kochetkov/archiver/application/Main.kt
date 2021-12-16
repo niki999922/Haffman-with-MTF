@@ -23,6 +23,8 @@ class Main {
 
             val inputFile = File(args[0])
             val outputFile = File(args[1])
+            println("input file: ${inputFile.absolutePath}")
+            println("output file: ${outputFile.absolutePath}")
             val tempFile = Files.createTempFile("temp_dec_enc", "txt").toFile()
 
             if (!inputFile.exists()) {
@@ -34,12 +36,15 @@ class Main {
                 if (doEncode) {
                     Solve("encode", inputFile, tempFile).solve()
 
+                    println("start arithmetic")
                     BufferedInputStream(FileInputStream(tempFile)).use { input ->
                         CodingOS(BufferedOutputStream(FileOutputStream(outputFile))).use { out ->
                             compress(input, out)
                         }
                     }
+                    println("Complete encode!")
                 } else {
+                    println("start decode arithmetic")
                     CodingIS(BufferedInputStream(FileInputStream(inputFile))).use { input ->
                         BufferedOutputStream(FileOutputStream(tempFile)).use { out ->
                             decompress(input, out)
@@ -47,10 +52,10 @@ class Main {
                     }
 
                     Solve("decode", tempFile, outputFile).solve()
+                    println("Complete decode!")
                 }
             } finally {
-                println("TEEEEEEMP FILE: ${tempFile.toPath().toAbsolutePath()}")
-//                tempFile.delete()
+                tempFile.delete()
             }
         }
     }
