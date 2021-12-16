@@ -3,8 +3,6 @@ package com.kochetkov.archiver.solve
 import java.io.*
 
 object AdaptiveArithmeticDecompress {
-    // To allow unit testing, this method is package-private instead of private.
-    @Throws(IOException::class)
     fun decompress(`in`: BitInputStream?, out: OutputStream) {
         val initFreqs = FlatFrequencyTable(257)
         val freqs: FrequencyTable = SimpleFrequencyTable(initFreqs)

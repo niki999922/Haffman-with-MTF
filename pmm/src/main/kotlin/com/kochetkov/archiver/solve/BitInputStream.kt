@@ -31,11 +31,6 @@ class BitInputStream(input: InputStream) : Closeable {
         return currentByte ushr numBitsRemaining and 1
     }
 
-    fun readNoEof(): Int {
-        val result = read()
-        return if (result != -1) result else throw EOFException()
-    }
-
     override fun close() {
         input.close()
         currentByte = -1
