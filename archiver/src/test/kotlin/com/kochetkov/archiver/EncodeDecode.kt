@@ -47,6 +47,16 @@ class EncodeDecode {
     }
 
     @Test
+//    @Ignore
+    fun `have to encode decode correct JPG 80`() {
+        listOf("airplane80.jpg","arctichare80.jpg","baboon80.jpg","cat80.jpg","fruits80.jpg","frymire80.jpg","girl80.jpg","lena80.jpg","monarch80.jpg","peppers80.jpg","pool80.jpg","sails80.jpg","serrano80.jpg","tulips80.jpg","watch80.jpg").parallelStream().forEach {
+            testFile(File("/Users/nikita.kochetkov/Haffman-with-MTF/lab2/jpeg80/$it"))
+        }
+
+//        testFile(File("/Users/nikita.kochetkov/Haffman-with-MTF/lab2/jpeg30/airplane30.jpg"))
+    }
+
+    @Test
     @Ignore
     fun `have to encode decode correct vala`() {
         testFile(File("/Users/nikita.kochetkov/Haffman-with-MTF/calgarycorpus/airplane30_vala.ppm"))

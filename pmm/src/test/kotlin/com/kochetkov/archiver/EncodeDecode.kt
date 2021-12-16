@@ -66,8 +66,8 @@ class EncodeDecode {
         tempDirectory.resolve("compressedResults.txt").let { it.delete(); it.createNewFile() }
 
         val fileNames = listOf(
-            "airplane30.ppm", "arctichare30.ppm", "baboon30.ppm", "cat30.ppm", "fruits30.ppm", "frymire30.ppm", "girl30.ppm", "lena30.ppm", "monarch30.ppm", "peppers30.ppm", "pool30.ppm", "sails30.ppm", "serrano30.ppm", "tulips30.ppm", "watch30.ppm"
-//            "airplane80.ppm", "arctichare80.ppm", "baboon80.ppm", "cat80.ppm", "fruits80.ppm", "frymire80.ppm", "girl80.ppm", "lena80.ppm", "monarch80.ppm", "peppers80.ppm", "pool80.ppm", "sails80.ppm", "serrano80.ppm", "tulips80.ppm", "watch80.ppm",
+//            "airplane30.ppm", "arctichare30.ppm", "baboon30.ppm", "cat30.ppm", "fruits30.ppm", "frymire30.ppm", "girl30.ppm", "lena30.ppm", "monarch30.ppm", "peppers30.ppm", "pool30.ppm", "sails30.ppm", "serrano30.ppm", "tulips30.ppm", "watch30.ppm"
+            "airplane80.ppm", "arctichare80.ppm", "baboon80.ppm", "cat80.ppm", "fruits80.ppm", "frymire80.ppm", "girl80.ppm", "lena80.ppm", "monarch80.ppm", "peppers80.ppm", "pool80.ppm", "sails80.ppm", "serrano80.ppm", "tulips80.ppm", "watch80.ppm",
         )
 
         fileNames.parallelStream().forEach { file ->
@@ -82,7 +82,7 @@ class EncodeDecode {
 //        val dirWith30Jpg = File("/Users/nikita.kochetkov/Haffman-with-MTF/lab2/jpeg80")
         val dirWith30Jpg = File("/Users/nikita.kochetkov/Haffman-with-MTF/lab2/test_case/all/just_test")
 //        val dirWith30Jpg = File("/Users/nikita.kochetkov/Haffman-with-MTF/lab2/test_case/all/test2")
-        val files = dirWith30Jpg.listFiles().filter { it.name.endsWith("30_encode_.ppm") }
+        val files = dirWith30Jpg.listFiles().filter { it.name.endsWith("80_encode_.ppm") }
         val sumWeight = files.map {
             val fileWei = it.readBytes().size
             println("${it.name}: ${fileWei}")
@@ -91,10 +91,11 @@ class EncodeDecode {
 
 
         println("_____________________")
-        println("NEEEEED: 594784")
+//        println("NEEEEED: 594784???")
+        println("NEEEEED: 1360640")
         println("OUR SUM: ${sumWeight}")
-        println("OST: ${sumWeight - 594784} bytes")
-        println("GETTED: ${BigDecimal(100).setScale(5).minus(BigDecimal(sumWeight * 100).setScale(5).div(BigDecimal(606923)))}%")
+        println("OST: ${sumWeight - 1360640} bytes")
+        println("GETTED: ${BigDecimal(100).setScale(5).minus(BigDecimal(sumWeight * 100).setScale(5).div(BigDecimal(1388409)))}%")
     }
 
 
