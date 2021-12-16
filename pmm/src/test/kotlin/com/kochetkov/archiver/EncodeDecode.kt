@@ -123,7 +123,7 @@ class EncodeDecode {
 
             BufferedInputStream(FileInputStream(file)).use { input ->
                 BitOutputStream(BufferedOutputStream(FileOutputStream(tempFile.toFile()))).use { out ->
-                    AdaptiveArithmeticCompress.compress(input, out)
+                    compress(input, out)
                 }
             }
 //            AdaptiveArithmeticCompress.main(arrayOf(file.toPath().toAbsolutePath().toString(), tempFile.toAbsolutePath().toString()))
@@ -137,7 +137,7 @@ class EncodeDecode {
 
             BitInputStream(BufferedInputStream(FileInputStream(tempFile.toFile()))).use { input ->
                 BufferedOutputStream(FileOutputStream(tempFile2.toFile())).use { out ->
-                    AdaptiveArithmeticDecompress.decompress(input, out)
+                    decompress(input, out)
                 }
             }
 //            AdaptiveArithmeticDecompress.main(arrayOf(tempFile.toAbsolutePath().toString(), tempFile2.toAbsolutePath().toString()))
