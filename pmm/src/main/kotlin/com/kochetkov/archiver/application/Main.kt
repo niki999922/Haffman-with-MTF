@@ -37,9 +37,7 @@ class Main {
                             compress(input, out)
                         }
                     }
-//                    AdaptiveArithmeticCompress.main(arrayOf(tempFile.toPath().toAbsolutePath().toString(), outputFile.toPath().toAbsolutePath().toString()))
                 } else {
-//                    AdaptiveArithmeticDecompress.main(arrayOf(inputFile.toPath().toAbsolutePath().toString(), tempFile.toPath().toAbsolutePath().toString()))
                     CodingIS(BufferedInputStream(FileInputStream(inputFile))).use { input ->
                         BufferedOutputStream(FileOutputStream(tempFile)).use { out ->
                             decompress(input, out)

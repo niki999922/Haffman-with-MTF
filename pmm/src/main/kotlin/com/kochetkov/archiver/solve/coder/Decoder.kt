@@ -18,10 +18,10 @@ class Decoder(numBits: Int, val input: CodingIS) : Core(numBits) {
         val value = ((offset + 1) * total - 1) / range
 
         var start = 0
-        var end = frequencyS.symbolLimit
+        var end = frequencyS.limit
         while (end - start > 1) {
             val middle = start + end ushr 1
-            if (frequencyS.getLow(middle) > value) end = middle else start = middle
+            if (frequencyS.down(middle) > value) end = middle else start = middle
         }
         val symbol = start
         update(frequencyS, symbol)

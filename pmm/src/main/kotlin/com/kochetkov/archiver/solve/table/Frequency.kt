@@ -1,13 +1,13 @@
 package com.kochetkov.archiver.solve.table
 
 interface Frequency {
-    val symbolLimit: Int
+    val limit: Int
     val total: Int
 
     operator fun get(symbol: Int): Int
-    operator fun set(symbol: Int, freq: Int)
+    operator fun set(symbol: Int, frequency: Int)
 
-    fun increment(symbol: Int)
-    fun getLow(symbol: Int): Int
-    fun getHigh(symbol: Int): Int
+    fun inc(symbol: Int)
+    fun down(symbol: Int): Int
+    fun top(symbol: Int): Int
 }

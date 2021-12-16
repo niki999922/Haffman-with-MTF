@@ -9,8 +9,7 @@ class SimpleFrequency : Frequency {
 
     init {
         val frequency = FlatFrequency(CONST)
-        val numSym = frequency.symbolLimit
-        frequencies = IntArray(numSym)
+        frequencies = IntArray(frequency.limit)
         total = 0
         for (i in frequencies.indices) {
             val x = frequency[i]
@@ -20,33 +19,31 @@ class SimpleFrequency : Frequency {
         cumulative = null
     }
 
-    override val symbolLimit: Int
+    override val limit: Int
         get() = frequencies.size
 
-    override fun get(symbol: Int): Int {
-        return frequencies[symbol]
-    }
+    override fun get(symbol: Int) = frequencies[symbol]
 
-    override fun set(symbol: Int, freq: Int) {
+    override fun set(symbol: Int, frequency: Int) {
         val temp = total - frequencies[symbol]
-        total = temp + freq
-        frequencies[symbol] = freq
+        total = temp + frequency
+        frequencies[symbol] = frequency
         cumulative = null
     }
 
-    override fun increment(symbol: Int) {
+    override fun inc(symbol: Int) {
         total += 1
         frequencies[symbol]++
         cumulative = null
     }
 
 
-    override fun getLow(symbol: Int): Int {
+    override fun down(symbol: Int): Int {
         if (cumulative == null) initCumulative()
         return cumulative!![symbol]
     }
 
-    override fun getHigh(symbol: Int): Int {
+    override fun top(symbol: Int): Int {
         if (cumulative == null) initCumulative()
         return cumulative!![symbol + 1]
     }

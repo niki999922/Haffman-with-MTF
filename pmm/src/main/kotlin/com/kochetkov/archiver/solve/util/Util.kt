@@ -16,7 +16,7 @@ fun compress(input: InputStream, out: CodingOS) {
         val symbol = input.read()
         if (symbol == -1) break
         enc.write(frequency, symbol)
-        frequency.increment(symbol)
+        frequency.inc(symbol)
     }
     enc.write(frequency, 256)
     enc.output.write(1)
@@ -29,7 +29,7 @@ fun decompress(input: CodingIS, out: OutputStream) {
         val symbol: Int = dec.read(frequency)
         if (symbol == 256) break
         out.write(symbol)
-        frequency.increment(symbol)
+        frequency.inc(symbol)
     }
 }
 

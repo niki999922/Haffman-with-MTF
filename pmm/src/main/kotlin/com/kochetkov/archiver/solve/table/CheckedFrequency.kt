@@ -2,9 +2,9 @@ package com.kochetkov.archiver.solve.table
 
 
 class CheckedFrequency(private val freqTable: Frequency) : Frequency {
-    override val symbolLimit: Int
+    override val limit: Int
         get() {
-            return freqTable.symbolLimit
+            return freqTable.limit
         }
 
     override fun get(symbol: Int): Int {
@@ -16,15 +16,15 @@ class CheckedFrequency(private val freqTable: Frequency) : Frequency {
             return freqTable.total
         }
 
-    override fun getLow(symbol: Int): Int = freqTable.getLow(symbol)
+    override fun down(symbol: Int): Int = freqTable.down(symbol)
 
-    override fun getHigh(symbol: Int): Int  = freqTable.getHigh(symbol)
+    override fun top(symbol: Int): Int  = freqTable.top(symbol)
 
-    override fun set(symbol: Int, freq: Int) {
-        freqTable[symbol] = freq
+    override fun set(symbol: Int, frequency: Int) {
+        freqTable[symbol] = frequency
     }
 
-    override fun increment(symbol: Int) {
-        freqTable.increment(symbol)
+    override fun inc(symbol: Int) {
+        freqTable.inc(symbol)
     }
 }

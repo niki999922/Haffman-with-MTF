@@ -28,8 +28,8 @@ abstract class Core(numBits: Int) {
         val range = high - low + 1
 
         val total = freqs.total.toLong()
-        val symLow = freqs.getLow(symbol).toLong()
-        val symHigh = freqs.getHigh(symbol).toLong()
+        val symLow = freqs.down(symbol).toLong()
+        val symHigh = freqs.top(symbol).toLong()
 
         val newLow = low + symLow * range / total
         val newHigh = low + symHigh * range / total - 1
