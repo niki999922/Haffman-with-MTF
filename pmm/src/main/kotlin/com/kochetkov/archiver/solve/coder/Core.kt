@@ -2,14 +2,14 @@ package com.kochetkov.archiver.solve.coder
 
 import com.kochetkov.archiver.solve.CheckedFrequencyTable
 
-abstract class ArithmeticCoderBase(numBits: Int) {
-    protected val numStateBits: Int
-    private val fullRange: Long
-    protected val halfRange: Long
-    private val quarterRange: Long
-    protected val stateMask: Long
-    protected var low: Long
-    protected var high: Long
+abstract class Core(numBits: Int) {
+    val numStateBits: Int
+    val fullRange: Long
+    val halfRange: Long
+    val quarterRange: Long
+    val stateMask: Long
+    var low: Long
+    var high: Long
 
     init {
         numStateBits = numBits

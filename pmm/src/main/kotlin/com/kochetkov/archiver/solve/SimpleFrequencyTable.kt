@@ -1,13 +1,14 @@
 package com.kochetkov.archiver.solve
 
 
-class SimpleFrequencyTable(frequency: FrequencyTable) : FrequencyTable {
+class SimpleFrequencyTable : FrequencyTable {
     private var frequencies: IntArray
     private var cumulative: IntArray?
     override var total: Int = 0
 
 
     init {
+        val frequency = FlatFrequencyTable(CONST)
         val numSym = frequency.symbolLimit
         frequencies = IntArray(numSym)
         total = 0
@@ -57,5 +58,9 @@ class SimpleFrequencyTable(frequency: FrequencyTable) : FrequencyTable {
             sum += frequencies[i]
             cumulative!![i + 1] = sum
         }
+    }
+
+    companion object {
+        const val CONST = 257
     }
 }

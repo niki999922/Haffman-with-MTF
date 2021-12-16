@@ -5,13 +5,10 @@ import com.kochetkov.archiver.solve.FrequencyTable
 import com.kochetkov.archiver.solve.stream.CodingIS
 
 
-class ArithmeticDecoder(numBits: Int, private val input: CodingIS) : ArithmeticCoderBase(numBits) {
-    private var code: Long
+class Decoder(numBits: Int, val input: CodingIS) : Core(numBits) {
+    var code: Long = 0
 
-    init {
-        code = 0
-        for (i in 0 until numStateBits) code = code shl 1 or readCodeBit().toLong()
-    }
+    init { for (i in 0 until numStateBits) code = code shl 1 or readCodeBit().toLong() }
 
     fun read(frequency: FrequencyTable): Int {
         val frequencyS = CheckedFrequencyTable(frequency)
