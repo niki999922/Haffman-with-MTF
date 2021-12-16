@@ -1,30 +1,23 @@
 package com.kochetkov.archiver.solve.table
 
 
-class CheckedFrequency(private val freqTable: Frequency) : Frequency {
-    override val limit: Int
-        get() {
-            return freqTable.limit
-        }
+class CheckedFrequency(val frequency: Frequency) : Frequency {
+    override fun get(symbol: Int) = frequency[symbol]
 
-    override fun get(symbol: Int): Int {
-        return freqTable[symbol]
-    }
+    override val limit: Int
+        get() = frequency.limit
 
     override val total: Int
-        get() {
-            return freqTable.total
-        }
+        get() = frequency.total
 
-    override fun down(symbol: Int): Int = freqTable.down(symbol)
-
-    override fun top(symbol: Int): Int  = freqTable.top(symbol)
+    override fun down(symbol: Int) = frequency.down(symbol)
+    override fun top(symbol: Int) = frequency.top(symbol)
 
     override fun set(symbol: Int, frequency: Int) {
-        freqTable[symbol] = frequency
+        this.frequency[symbol] = frequency
     }
 
     override fun inc(symbol: Int) {
-        freqTable.inc(symbol)
+        frequency.inc(symbol)
     }
 }

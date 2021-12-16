@@ -11,7 +11,6 @@ class FlatFrequency(override val total: Int) : Frequency {
     override fun set(symbol: Int, frequency: Int) {
         //TODO: not need
     }
-
     override fun inc(symbol: Int) {
         //TODO: not need
     }

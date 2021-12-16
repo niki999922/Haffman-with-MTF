@@ -39,16 +39,16 @@ class SimpleFrequency : Frequency {
 
 
     override fun down(symbol: Int): Int {
-        if (cumulative == null) initCumulative()
+        if (cumulative == null) init()
         return cumulative!![symbol]
     }
 
     override fun top(symbol: Int): Int {
-        if (cumulative == null) initCumulative()
+        if (cumulative == null) init()
         return cumulative!![symbol + 1]
     }
 
-    private fun initCumulative() {
+    private fun init() {
         cumulative = IntArray(frequencies.size + 1)
         var sum = 0
         for (i in frequencies.indices) {
