@@ -9,24 +9,21 @@ class ArithmeticDecoder(numBits: Int, private val input: BitInputStream) : Arith
         for (i in 0 until numStateBits) code = code shl 1 or readCodeBit().toLong()
     }
 
-    fun read(freqs: FrequencyTable): Int {
-        return read(CheckedFrequencyTable(freqs))
-    }
-
-    fun read(freqs: CheckedFrequencyTable): Int {
-        val total = freqs.total.toLong()
+    fun read(frequency: FrequencyTable): Int {
+        val frequencyS = CheckedFrequencyTable(frequency)
+        val total = frequencyS.total.toLong()
         val range = high - low + 1
         val offset = code - low
         val value = ((offset + 1) * total - 1) / range
 
         var start = 0
-        var end = freqs.symbolLimit
+        var end = frequencyS.symbolLimit
         while (end - start > 1) {
             val middle = start + end ushr 1
-            if (freqs.getLow(middle) > value) end = middle else start = middle
+            if (frequencyS.getLow(middle) > value) end = middle else start = middle
         }
         val symbol = start
-        update(freqs, symbol)
+        update(frequencyS, symbol)
         return symbol
     }
 

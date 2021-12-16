@@ -4,13 +4,11 @@ package com.kochetkov.archiver.solve
 class CheckedFrequencyTable(private val freqTable: FrequencyTable) : FrequencyTable {
     override val symbolLimit: Int
         get() {
-            val result = freqTable.symbolLimit
-            return result
+            return freqTable.symbolLimit
         }
 
     override fun get(symbol: Int): Int {
-        val result = freqTable[symbol]
-        return result
+        return freqTable[symbol]
     }
 
     override val total: Int

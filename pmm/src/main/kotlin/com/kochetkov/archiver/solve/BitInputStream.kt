@@ -1,21 +1,11 @@
 package com.kochetkov.archiver.solve
 
 import java.io.Closeable
-import kotlin.Throws
-import java.io.IOException
-import java.lang.AssertionError
-import java.io.EOFException
 import java.io.InputStream
-import java.util.Objects
 
 class BitInputStream(private val input: InputStream) : Closeable {
-    private var currentByte: Int
-    private var numBitsRemaining: Int
-
-    init {
-        currentByte = 0
-        numBitsRemaining = 0
-    }
+    private var currentByte = 0
+    private var numBitsRemaining = 0
 
     fun read(): Int {
         if (currentByte == -1) return -1

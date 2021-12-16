@@ -7,12 +7,12 @@ class SimpleFrequencyTable : FrequencyTable {
     override var total: Int
 
 
-    constructor(freqs: FrequencyTable) {
-        val numSym = freqs.symbolLimit
+    constructor(frequency: FrequencyTable) {
+        val numSym = frequency.symbolLimit
         frequencies = IntArray(numSym)
         total = 0
         for (i in frequencies.indices) {
-            val x = freqs[i]
+            val x = frequency[i]
             frequencies[i] = x
             total += x
         }
