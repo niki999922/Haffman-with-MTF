@@ -4,6 +4,7 @@ val kotlinVersion = fromExtra("kotlinVersion")!!
 dependencies {
     implementation("com.google.code.gson:gson:2.8.6")
     implementation(kotlin("stdlib", kotlinVersion))
+    implementation(project(":archiver"))
 
     testImplementation("junit:junit:4.12")
 }
@@ -12,7 +13,7 @@ application {
    mainClass.set("com.kochetkov.archiver.app.Main")
 }
 
-tasks.register<Jar>("archiver-fatJar") {
+tasks.register<Jar>("archiver-lab2-fatJar") {
     dependsOn(tasks.build, tasks.test)
 
     archiveVersion.set("")
@@ -22,7 +23,7 @@ tasks.register<Jar>("archiver-fatJar") {
 
     manifest {
         attributes(
-            "Main-Class" to "com.kochetkov.archiver.app.Main",
+            "Main-Class" to "com.kochetkov.archiver.application.Main",
             "Multi-Release" to "true"
         )
     }

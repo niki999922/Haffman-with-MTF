@@ -2,6 +2,7 @@ package com.kochetkov.archiver
 
 import com.kochetkov.archiver.solve.*
 import org.junit.Assert
+import org.junit.Ignore
 import org.junit.Test
 import java.io.File
 import java.math.BigDecimal
@@ -10,6 +11,7 @@ import java.math.BigInteger
 class EncodeDecode {
 
     @Test
+    @Ignore
     fun `test compr magic`() {
         val tempDirectory = File("/Users/nikita.kochetkov/Haffman-with-MTF/lab2/test_case/all/test1")
         val l = tempDirectory.resolve("__baboon30_encode_.ppm")
@@ -18,6 +20,7 @@ class EncodeDecode {
     }
 
     @Test
+    @Ignore
     fun `have to encode and decode fruits my bwt`() {
         val tempDirectory = File("/Users/nikita.kochetkov/Haffman-with-MTF/lab2/test_case/all/test30_2")
 //        val tempDirectory = File("/Users/nikita.kochetkov/Haffman-with-MTF/lab2/test_case/all/test80_2")
@@ -40,6 +43,7 @@ class EncodeDecode {
     }
 
     @Test
+    @Ignore
     fun `have to encode and decode fruits`() {
         val tempDirectory = File("/Users/nikita.kochetkov/Haffman-with-MTF/lab2/test_case/fruits/test2")
         tempDirectory.resolve("compressedResults.txt").let { it.delete(); it.createNewFile() }
