@@ -97,11 +97,11 @@ class Solve(val mode: String, val input: File, val output: File) {
                 } else {
                     list.add(byteArray[i].toInt().correctInt())
                     list.add(byteArray[i].toInt().correctInt())
-                    val count = get_r2_int(byteArray[i + 2]) + get_r1_int(byteArray[i + 3])
+                    val count = get_r1_int(byteArray[i + 2])
                     for (z in 1..count) {
                         list.add(byteArray[i].toInt().correctInt())
                     }
-                    i += 4
+                    i += 3
                 }
             } else {
                 list.add(byteArray[i].toInt().correctInt())
@@ -382,7 +382,7 @@ class Solve(val mode: String, val input: File, val output: File) {
         var countSimb = 0
 
         ints.forEach {
-            if (curSimb == it) {
+            if (curSimb == it && countSimb <= 256) {
                 countSimb++
             } else {
                 newList.add(curSimb to countSimb)
@@ -414,7 +414,7 @@ class Solve(val mode: String, val input: File, val output: File) {
             } else {
                 biteList.add(symbol.toByte())
                 biteList.add(symbol.toByte())
-                biteList.add(get_r2_byte(count - 2))
+//                biteList.add(get_r2_byte(count - 2))
                 biteList.add(get_r1_byte(count - 2))
             }
             if (count > (1 shl 16)) {

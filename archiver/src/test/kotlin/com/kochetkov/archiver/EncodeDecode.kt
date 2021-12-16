@@ -47,6 +47,18 @@ class EncodeDecode {
     }
 
     @Test
+    @Ignore
+    fun `have to encode decode correct vala`() {
+        testFile(File("/Users/nikita.kochetkov/Haffman-with-MTF/calgarycorpus/airplane30_vala.ppm"))
+    }
+
+    @Test
+//    @Ignore
+    fun `have to encode decode correct airplane30`() {
+        testFile(File("/Users/nikita.kochetkov/Haffman-with-MTF/calgarycorpus/airplane30.jpg"))
+    }
+
+    @Test
 //    @Ignore
     fun `have to encode decode correct 10`() {
         testFile(File("/Users/nikita.kochetkov/Haffman-with-MTF/calgarycorpus/trans"))
