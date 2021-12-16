@@ -29,9 +29,9 @@ abstract class Core(numBits: Int) {
 
         val newLow = low + (frequency.down(symbol).toLong()) * range / (frequency.total.toLong())
         val newHigh = low + (frequency.top(symbol).toLong()) * range / (frequency.total.toLong()) - 1
+
         low = newLow
         high = newHigh
-
         while (low xor high and hRange == 0L) {
             shift()
             low = low shl 1 and mask
