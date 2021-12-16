@@ -13,8 +13,8 @@ class Main {
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            val doEncode = true
-//            val doEncode = false
+//            val doEncode = true
+            val doEncode = false
 
             if (args.size < 2) {
                 System.err.println("Expected tree arguments: <input> <output>")

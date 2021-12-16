@@ -24,15 +24,11 @@ abstract class Core(numBits: Int) {
     protected abstract fun shift()
     protected abstract fun under()
 
-    protected fun update(freqs: CFrequency, symbol: Int) {
+    protected fun update(frequency: CFrequency, symbol: Int) {
         val range = high - low + 1
 
-        val total = freqs.total.toLong()
-        val symLow = freqs.down(symbol).toLong()
-        val symHigh = freqs.top(symbol).toLong()
-
-        val newLow = low + symLow * range / total
-        val newHigh = low + symHigh * range / total - 1
+        val newLow = low + (frequency.down(symbol).toLong()) * range / (frequency.total.toLong())
+        val newHigh = low + (frequency.top(symbol).toLong()) * range / (frequency.total.toLong()) - 1
         low = newLow
         high = newHigh
 
