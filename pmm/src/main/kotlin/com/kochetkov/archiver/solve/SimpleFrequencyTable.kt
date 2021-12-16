@@ -1,13 +1,13 @@
 package com.kochetkov.archiver.solve
 
 
-class SimpleFrequencyTable : FrequencyTable {
+class SimpleFrequencyTable(frequency: FrequencyTable) : FrequencyTable {
     private var frequencies: IntArray
     private var cumulative: IntArray?
-    override var total: Int
+    override var total: Int = 0
 
 
-    constructor(frequency: FrequencyTable) {
+    init {
         val numSym = frequency.symbolLimit
         frequencies = IntArray(numSym)
         total = 0
