@@ -19,29 +19,31 @@ object AdaptiveArithmeticCompress {
     @JvmStatic
     fun main(args: Array<String>) {
         // Handle command line arguments
-        if (args.size != 2) {
-            System.err.println("Usage: java AdaptiveArithmeticCompress InputFile OutputFile")
-            System.exit(1)
-            return
-        }
-        val inputFile = File(args[0])
-        val outputFile = File(args[1])
-        BufferedInputStream(FileInputStream(inputFile)).use { input ->
-            BitOutputStream(BufferedOutputStream(FileOutputStream(outputFile))).use { out ->
-                compress(input, out)
-            }
-        }
+//        if (args.size != 2) {
+//            System.err.println("Usage: java AdaptiveArithmeticCompress InputFile OutputFile")
+//            System.exit(1)
+//            return
+//        }
+//        val inputFile = File(args[0])
+//        val outputFile = File(args[1])
+//
+//
+//        BufferedInputStream(FileInputStream(inputFile)).use { input ->
+//            BitOutputStream(BufferedOutputStream(FileOutputStream(outputFile))).use { out ->
+//                compress(input, out)
+//            }
+//        }
     }
 
     // To allow unit testing, this method is package-private instead of private.
     @Throws(IOException::class)
-    fun compress(`in`: InputStream, out: BitOutputStream?) {
+    fun compress(input: InputStream, out: BitOutputStream?) {
         val initFreqs = FlatFrequencyTable(257)
         val freqs: FrequencyTable = SimpleFrequencyTable(initFreqs)
         val enc = ArithmeticEncoder(32, out!!)
         while (true) {
             // Read and encode one byte
-            val symbol = `in`.read()
+            val symbol = input.read()
             if (symbol == -1) break
             enc.write(freqs, symbol)
             freqs.increment(symbol)

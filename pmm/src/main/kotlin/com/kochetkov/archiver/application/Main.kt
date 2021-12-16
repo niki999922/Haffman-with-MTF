@@ -3,7 +3,9 @@ package com.kochetkov.archiver.application
 import com.kochetkov.archiver.Solve
 import com.kochetkov.archiver.solve.AdaptiveArithmeticCompress
 import com.kochetkov.archiver.solve.AdaptiveArithmeticDecompress
-import java.io.File
+import com.kochetkov.archiver.solve.BitInputStream
+import com.kochetkov.archiver.solve.BitOutputStream
+import java.io.*
 import java.nio.file.Files
 
 class Main {
@@ -29,9 +31,21 @@ class Main {
             try {
                 if (doEncode) {
                     Solve("encode", inputFile, tempFile).solve()
-                    AdaptiveArithmeticCompress.main(arrayOf(tempFile.toPath().toAbsolutePath().toString(), outputFile.toPath().toAbsolutePath().toString()))
+
+                    BufferedInputStream(FileInputStream(tempFile)).use { input ->
+                        BitOutputStream(BufferedOutputStream(FileOutputStream(outputFile))).use { out ->
+                            AdaptiveArithmeticCompress.compress(input, out)
+                        }
+                    }
+//                    AdaptiveArithmeticCompress.main(arrayOf(tempFile.toPath().toAbsolutePath().toString(), outputFile.toPath().toAbsolutePath().toString()))
                 } else {
-                    AdaptiveArithmeticDecompress.main(arrayOf(inputFile.toPath().toAbsolutePath().toString(), tempFile.toPath().toAbsolutePath().toString()))
+//                    AdaptiveArithmeticDecompress.main(arrayOf(inputFile.toPath().toAbsolutePath().toString(), tempFile.toPath().toAbsolutePath().toString()))
+                    BitInputStream(BufferedInputStream(FileInputStream(inputFile))).use { input ->
+                        BufferedOutputStream(FileOutputStream(tempFile)).use { out ->
+                            AdaptiveArithmeticDecompress.decompress(input, out)
+                        }
+                    }
+
                     Solve("decode", tempFile, outputFile).solve()
                 }
             } finally {

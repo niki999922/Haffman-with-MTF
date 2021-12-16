@@ -4,7 +4,7 @@ import com.kochetkov.archiver.solve.*
 import org.junit.Assert
 import org.junit.Ignore
 import org.junit.Test
-import java.io.File
+import java.io.*
 import java.math.BigDecimal
 import java.math.BigInteger
 
@@ -119,7 +119,14 @@ class EncodeDecode {
 
         println("Start compress for $name")
         val startComp = System.currentTimeMillis()
-        AdaptiveArithmeticCompress.main(arrayOf(file.toPath().toAbsolutePath().toString(), tempFile.toAbsolutePath().toString()))
+
+
+            BufferedInputStream(FileInputStream(file)).use { input ->
+                BitOutputStream(BufferedOutputStream(FileOutputStream(tempFile.toFile()))).use { out ->
+                    AdaptiveArithmeticCompress.compress(input, out)
+                }
+            }
+//            AdaptiveArithmeticCompress.main(arrayOf(file.toPath().toAbsolutePath().toString(), tempFile.toAbsolutePath().toString()))
 
 
         val endComp = System.currentTimeMillis()
@@ -127,7 +134,13 @@ class EncodeDecode {
 
         println("Start decompress for $name")
         val startDec = System.currentTimeMillis()
-        AdaptiveArithmeticDecompress.main(arrayOf(tempFile.toAbsolutePath().toString(), tempFile2.toAbsolutePath().toString()))
+
+            BitInputStream(BufferedInputStream(FileInputStream(tempFile.toFile()))).use { input ->
+                BufferedOutputStream(FileOutputStream(tempFile2.toFile())).use { out ->
+                    AdaptiveArithmeticDecompress.decompress(input, out)
+                }
+            }
+//            AdaptiveArithmeticDecompress.main(arrayOf(tempFile.toAbsolutePath().toString(), tempFile2.toAbsolutePath().toString()))
 
 
         val endDec = System.currentTimeMillis()

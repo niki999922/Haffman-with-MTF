@@ -1,8 +1,6 @@
 package com.kochetkov.archiver.solve
 
 import java.io.*
-import kotlin.Throws
-import kotlin.jvm.JvmStatic
 
 /**
  * Decompression application using adaptive arithmetic coding.
@@ -16,14 +14,18 @@ object AdaptiveArithmeticDecompress {
     @JvmStatic
     fun main(args: Array<String>) {
         // Handle command line arguments
-        if (args.size != 2) {
-            System.err.println("Usage: java AdaptiveArithmeticDecompress InputFile OutputFile")
-            System.exit(1)
-            return
-        }
-        val inputFile = File(args[0])
-        val outputFile = File(args[1])
-        BitInputStream(BufferedInputStream(FileInputStream(inputFile))).use { `in` -> BufferedOutputStream(FileOutputStream(outputFile)).use { out -> decompress(`in`, out) } }
+//        if (args.size != 2) {
+//            System.err.println("Usage: java AdaptiveArithmeticDecompress InputFile OutputFile")
+//            System.exit(1)
+//            return
+//        }
+//        val inputFile = File(args[0])
+//        val outputFile = File(args[1])
+//        BitInputStream(BufferedInputStream(FileInputStream(inputFile))).use { input ->
+//            BufferedOutputStream(FileOutputStream(outputFile)).use { out ->
+//                decompress(input, out)
+//            }
+//        }
     }
 
     // To allow unit testing, this method is package-private instead of private.
