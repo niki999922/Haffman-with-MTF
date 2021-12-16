@@ -1,8 +1,6 @@
 package com.kochetkov.archiver.solve
 
 import java.io.*
-import kotlin.Throws
-import kotlin.jvm.JvmStatic
 
 /**
  * Compression application using adaptive arithmetic coding.
@@ -28,7 +26,11 @@ object AdaptiveArithmeticCompress {
         }
         val inputFile = File(args[0])
         val outputFile = File(args[1])
-        BufferedInputStream(FileInputStream(inputFile)).use { `in` -> BitOutputStream(BufferedOutputStream(FileOutputStream(outputFile))).use { out -> compress(`in`, out) } }
+        BufferedInputStream(FileInputStream(inputFile)).use { input ->
+            BitOutputStream(BufferedOutputStream(FileOutputStream(outputFile))).use { out ->
+                compress(input, out)
+            }
+        }
     }
 
     // To allow unit testing, this method is package-private instead of private.
