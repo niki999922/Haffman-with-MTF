@@ -1,16 +1,8 @@
 package com.kochetkov.archiver.solve
 
-import java.lang.ArithmeticException
-import java.util.Objects
 
-class ArithmeticEncoder(numBits: Int, out: BitOutputStream) : ArithmeticCoderBase(numBits) {
-    private val output: BitOutputStream
-    private var numUnderflow: Int
-
-    init {
-        output = Objects.requireNonNull(out)
-        numUnderflow = 0
-    }
+class ArithmeticEncoder(numBits: Int, private val output: BitOutputStream) : ArithmeticCoderBase(numBits) {
+    private var numUnderflow: Int = 0
 
     fun write(freqs: FrequencyTable?, symbol: Int) {
         write(CheckedFrequencyTable(freqs!!), symbol)
@@ -35,7 +27,6 @@ class ArithmeticEncoder(numBits: Int, out: BitOutputStream) : ArithmeticCoderBas
     }
 
     override fun underflow() {
-        if (numUnderflow == Int.MAX_VALUE) throw ArithmeticException("Maximum underflow reached")
         numUnderflow++
     }
 }

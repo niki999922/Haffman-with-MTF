@@ -9,6 +9,7 @@ class Main {
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
+//            val doEncode = true
             val doEncode = false
 
             if (args.size < 2) {

@@ -8,13 +8,11 @@ import java.io.EOFException
 import java.io.InputStream
 import java.util.Objects
 
-class BitInputStream(input: InputStream) : Closeable {
-    private val input: InputStream
+class BitInputStream(private val input: InputStream) : Closeable {
     private var currentByte: Int
     private var numBitsRemaining: Int
 
     init {
-        this.input = Objects.requireNonNull(input)
         currentByte = 0
         numBitsRemaining = 0
     }
@@ -26,7 +24,6 @@ class BitInputStream(input: InputStream) : Closeable {
             if (currentByte == -1) return -1
             numBitsRemaining = 8
         }
-        if (numBitsRemaining <= 0) throw AssertionError()
         numBitsRemaining--
         return currentByte ushr numBitsRemaining and 1
     }
