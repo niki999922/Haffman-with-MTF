@@ -116,7 +116,6 @@ class EncodeDecode {
         println("Start compress for $name")
         val startComp = System.currentTimeMillis()
         AdaptiveArithmeticCompress.main(arrayOf(file.toPath().toAbsolutePath().toString(), tempFile.toAbsolutePath().toString()))
-//        ArithmeticCompress.main(arrayOf(file.toPath().toAbsolutePath().toString(), tempFile.toAbsolutePath().toString()))
 
 
         val endComp = System.currentTimeMillis()
@@ -125,7 +124,6 @@ class EncodeDecode {
         println("Start decompress for $name")
         val startDec = System.currentTimeMillis()
         AdaptiveArithmeticDecompress.main(arrayOf(tempFile.toAbsolutePath().toString(), tempFile2.toAbsolutePath().toString()))
-//        ArithmeticDecompress.main(arrayOf(tempFile.toAbsolutePath().toString(), tempFile2.toAbsolutePath().toString()))
 
 
         val endDec = System.currentTimeMillis()
