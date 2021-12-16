@@ -11,7 +11,7 @@ import java.util.*
 
 class EncodeDecode {
     @Test
-//    @Ignore
+    @Ignore
     fun `have to encode decode correct testtxt`() {
         testFile(File("/Users/nikita.kochetkov/Haffman-with-MTF/calgarycorpus/test.txt"))
     }
@@ -29,7 +29,7 @@ class EncodeDecode {
     }
 
     @Test
-//    @Ignore
+    @Ignore
     fun `have to encode decode correct bib`() {
         listOf("bib", "book1", "book2", "news", "paper1", "paper2", "progc", "progl", "progp", "test.txt", "test2.txt", "trans").parallelStream().forEach {
             testFile(File("/Users/nikita.kochetkov/Haffman-with-MTF/calgarycorpus/$it"))
@@ -39,7 +39,7 @@ class EncodeDecode {
     @Test
 //    @Ignore
     fun `have to encode decode correct JPG`() {
-        listOf("airplane30.jpg","archiver.jar","arctichare30.jpg","baboon30.jpg","cat30.jpg","fruits30.jpg","frymire30.jpg","girl30.jpg","lena30.jpg","monarch30.jpg","peppers30.jpg","pool30.jpg","sails30.jpg","serrano30.jpg","tulips30.jpg","watch30.jpg").parallelStream().forEach {
+        listOf("airplane30.jpg","arctichare30.jpg","baboon30.jpg","cat30.jpg","fruits30.jpg","frymire30.jpg","girl30.jpg","lena30.jpg","monarch30.jpg","peppers30.jpg","pool30.jpg","sails30.jpg","serrano30.jpg","tulips30.jpg","watch30.jpg").parallelStream().forEach {
             testFile(File("/Users/nikita.kochetkov/Haffman-with-MTF/lab2/jpeg30/$it"))
         }
 
@@ -53,13 +53,13 @@ class EncodeDecode {
     }
 
     @Test
-//    @Ignore
+    @Ignore
     fun `have to encode decode correct airplane30`() {
         testFile(File("/Users/nikita.kochetkov/Haffman-with-MTF/calgarycorpus/airplane30.jpg"))
     }
 
     @Test
-//    @Ignore
+    @Ignore
     fun `have to encode decode correct 10`() {
         testFile(File("/Users/nikita.kochetkov/Haffman-with-MTF/calgarycorpus/trans"))
     }
@@ -89,7 +89,7 @@ class EncodeDecode {
     }
 
     @Test
-//    @Ignore
+    @Ignore
     fun `have to encode decode correct 5`() {
         testFile(File("/Users/nikita.kochetkov/Haffman-with-MTF/calgarycorpus/book2"))
     }

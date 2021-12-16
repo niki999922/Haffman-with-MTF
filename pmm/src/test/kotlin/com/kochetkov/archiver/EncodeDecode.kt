@@ -62,7 +62,7 @@ class EncodeDecode {
 
     @Test
     fun `have to encode and decode all lab files`() {
-        val tempDirectory = File("/Users/nikita.kochetkov/Haffman-with-MTF/lab2/test_case/all/oleg_arch")
+        val tempDirectory = File("/Users/nikita.kochetkov/Haffman-with-MTF/lab2/test_case/all/just_test")
         tempDirectory.resolve("compressedResults.txt").let { it.delete(); it.createNewFile() }
 
         val fileNames = listOf(
@@ -80,7 +80,7 @@ class EncodeDecode {
     @Test
     fun `have to encode and decode all lab files 2`() {
 //        val dirWith30Jpg = File("/Users/nikita.kochetkov/Haffman-with-MTF/lab2/jpeg80")
-        val dirWith30Jpg = File("/Users/nikita.kochetkov/Haffman-with-MTF/lab2/test_case/all/oleg_arch")
+        val dirWith30Jpg = File("/Users/nikita.kochetkov/Haffman-with-MTF/lab2/test_case/all/just_test")
 //        val dirWith30Jpg = File("/Users/nikita.kochetkov/Haffman-with-MTF/lab2/test_case/all/test2")
         val files = dirWith30Jpg.listFiles().filter { it.name.endsWith("30_encode_.ppm") }
         val sumWeight = files.map {

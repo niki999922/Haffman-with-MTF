@@ -39,7 +39,6 @@ class Solve(val mode: String, val input: File, val output: File) {
     private fun decode() {
         println("start read indexes")
         var textByte = Files.readAllBytes(input.toPath())
-
         var indexRead = get_r3_int(textByte[0]) + get_r2_int(textByte[1]) + get_r1_int(textByte[2])
 //        var indexRead = ByteBuffer.wrap(textByte.toMutableList().subList(0, 4).toByteArray()).int
         textByte = textByte.drop(3).toByteArray()
@@ -60,7 +59,8 @@ class Solve(val mode: String, val input: File, val output: File) {
         decodeBWT(intListRes.map { it.toByte() }.toByteArray(), indexRead, resList2)
 
         val res = resList2
-        output.writeBytes(res)
+        output.writeBytes(arrayOf(255.toByte()).toByteArray())
+        output.appendBytes(res)
         println("Complete decode!")
     }
 
@@ -241,7 +241,9 @@ class Solve(val mode: String, val input: File, val output: File) {
     private fun encode() {
         val newInts = mutableListOf<Int>()
 
-        val textByte = Files.readAllBytes(input.toPath())
+        var textByte = Files.readAllBytes(input.toPath())
+        println("FIRSTTTTTTT: ${textByte[0]}")
+        textByte = textByte.drop(1).toByteArray()
         val newByteArr = ByteArray(textByte.size)
         println("start bwt")
         val index = encodeBWT(textByte, newByteArr)
@@ -274,6 +276,42 @@ class Solve(val mode: String, val input: File, val output: File) {
         output.appendBytes(res)
     }
 
+
+    private fun convertToMonotoneCode2(ints: ByteArray): List<Byte> {
+        val newList = mutableListOf<Pair<Byte, Int>>()
+        var curSimb = ints[0]
+        var countSimb = 0
+
+        ints.forEach {
+            if (curSimb == it && countSimb <= 256) {
+                countSimb++
+            } else {
+                newList.add(curSimb to countSimb)
+                countSimb = 1
+                curSimb = it
+            }
+        }
+
+        newList.add(curSimb to countSimb)
+
+
+
+        val biteList = mutableListOf<Byte>()
+        newList.forEach { (symbol, count) ->
+            if (count == 1) {
+                biteList.add(symbol)
+            } else {
+                biteList.add(symbol)
+                biteList.add(symbol)
+                biteList.add(get_r1_byte(count - 2))
+            }
+            if (count > (1 shl 16)) {
+                println("ERRRROR")
+            }
+        }
+
+        return biteList
+    }
 
     private fun convertToMonotoneCode2(ints: List<Int>): List<Byte> {
         val newList = mutableListOf<Pair<Int, Int>>()
