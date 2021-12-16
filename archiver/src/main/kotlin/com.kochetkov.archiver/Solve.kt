@@ -42,16 +42,18 @@ class Solve(val mode: String, val input: File, val output: File) {
         println("start read indexes")
         var textByte = Files.readAllBytes(input.toPath())
 //        val indexAmount = ByteBuffer.wrap(textByte.toMutableList().subList(0, 4).toByteArray()).int
-        var indexRead = ByteBuffer.wrap(textByte.toMutableList().subList(0, 4).toByteArray()).int
 //        textByte = textByte.drop(8).toByteArray()
-        textByte = textByte.drop(4).toByteArray()
+
+        var indexRead = get_r3_int(textByte[0]) + get_r2_int(textByte[1]) + get_r1_int(textByte[2])
+//        var indexRead = ByteBuffer.wrap(textByte.toMutableList().subList(0, 4).toByteArray()).int
+        textByte = textByte.drop(3).toByteArray()
         val indList = mutableListOf<Int>()
         println("start bwt indexes")
 //        for (ind in 0 until indexAmount) {
 //            var indexRead = ByteBuffer.wrap(textByte.toMutableList().subList(ind * 4, ind * 4 + 4).toByteArray()).int
-        if (indexRead < 0) {
-            indexRead += 65536
-        }
+//        if (indexRead < 0) {
+//            indexRead += 65536
+//        }
         indList.add(indexRead)
 //        }
         textByte = textByte
@@ -332,7 +334,14 @@ class Solve(val mode: String, val input: File, val output: File) {
 
         println("start write indexes")
 //        output.writeBytes(ByteBuffer.allocate(4).putInt(indexes.size).array())
-        output.writeBytes(ByteBuffer.allocate(4).putInt(index).array())
+//        output.writeBytes(ByteBuffer.allocate(4).putInt(index).array())
+//        output.appendBytes(ByteBuffer.allocate(4).putInt(index).array())
+        val b1 = get_r1_byte(index)
+        val b2 = get_r2_byte(index)
+        val b3 = get_r3_byte(index)
+        output.writeBytes(arrayOf(b3, b2, b1).toByteArray())
+//        val b3 = get_r3_byte(index)
+
 //        indexes.forEach {
 //            output.appendBytes(ByteBuffer.allocate(4).putInt(it).array())
 //        }
@@ -484,17 +493,25 @@ class Solve(val mode: String, val input: File, val output: File) {
     }
 
     private fun get_r2_byte(intValue: Int): Byte {
-        return (intValue shr 8).toByte()
+        return ((intValue shl 16) shr 24).toByte()
+    }
+
+    private fun get_r3_byte(intValue: Int): Byte {
+        return (intValue shr 16).toByte()
+    }
+
+    private fun get_r3_int(byte: Byte): Int {
+        var c = if (byte.toInt() < 0) byte.toInt() + 256 else byte.toInt()
+        return (c shl 16)
     }
 
     private fun get_r2_int(byte: Byte): Int {
-//        if (byte.toInt() == 1) return 256
-        return (byte.toInt() shl 8)
+        var c = if (byte.toInt() < 0) byte.toInt() + 256 else byte.toInt()
+        return (c shl 8)
     }
 
     private fun get_r1_int(byte: Byte): Int {
         return if (byte.toInt() < 0) byte.toInt() + 256 else byte.toInt()
-//        return byte.toInt().correctInt()
     }
 
 
